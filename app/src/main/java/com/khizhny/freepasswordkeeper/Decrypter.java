@@ -25,7 +25,7 @@ class Decrypter {
 		private static final int ITERATION_COUNT = 1024;
 		private static final int KEY_STRENGTH = 128;  //  Maximum allowed key length
 		private SecretKey key;
-		private static final  byte[] zeroIV={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+		private static final  byte[] IV ={3,4,2,4,-55,127,-128, 80,99,40,20,4,34,3,5,2};
 
 		Decrypter(String passPhrase, String login) {
 				SecretKeyFactory factory;
@@ -48,7 +48,7 @@ class Decrypter {
 
 		String encrypt(String data) {
 				try {
-						cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(zeroIV));
+						cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV));
 				} catch (InvalidKeyException e) {
 						e.printStackTrace();
 						return "";
@@ -72,7 +72,7 @@ class Decrypter {
 
 		String decrypt(String base64EncryptedData){
 				try {
-						cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(zeroIV));
+						cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV));
 						byte[] decryptedData = Base64.decode(base64EncryptedData, Base64.DEFAULT);
 						byte[] utf8 = cipher.doFinal(decryptedData);
 						return new String(utf8, "UTF8");

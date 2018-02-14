@@ -79,6 +79,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 		@Override
 		protected void onStop() {
 				super.onStop();
+				if (alertDialog!=null) {
+						if (alertDialog.isShowing()) alertDialog.dismiss();
+				}
 				db.close();
 		}
 
@@ -99,7 +102,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 								// TODO open next activity
 								Intent intent = new Intent(this, MainActivity.class);
 								intent.putExtra("user_id", user.id );
-								intent.putExtra("password", pass.toString() );
+								intent.putExtra("password", pass);
+								intent.putExtra("login", user.name);
 								startActivity(intent);
 						} else{
 								Toast.makeText(this, "Password is wrong", Toast.LENGTH_LONG).show();
@@ -132,10 +136,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 														}else{
 																alertDialog.dismiss();
 																User user=new User(userName,-1);
-																Category rootCategory=new Category(user);
 																user.decrypter=new Decrypter(userPass,userName);
 																user.name_encrypted=user.decrypter.encrypt(user.name);
-																db.addOrEditUser(user);
+																addTestRecords(user);
+																db.addOrEditNode(user,true);
 																refreshUserList();
 																attemptLogin(user,userPass);
 														}
@@ -165,6 +169,25 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 								break;
 				}
 
+		}
+
+		private void addTestRecords(User u){
+					Category c1= new Category(u.rootCategory,"Folder1");
+					Category c2= new Category(u.rootCategory,"Folder2");
+					Category c3= new Category(u.rootCategory,"Folder3");
+
+					Category sc1= new Category(c1,"SubFolder1");
+					Category sc2= new Category(c1,"SubFolder2");
+					Category sc3= new Category(c1,"SubFolder3");
+
+					Category sc4= new Category(c2,"SubFolder4");
+					Category sc5= new Category(c2,"SubFolder5");
+					Category sc6= new Category(c2,"SubFolder6");
+
+					Entry e1 = new Entry(u.rootCategory,"pass1","name1","TestEntry#1","comment","url",-1);
+					Entry e2 = new Entry(c1,"pass1","name2","TestEntry#2","comment","url",-1);
+					Entry e3 = new Entry(c1,"pass1","name3","TestEntry#3","comment","url",-1);
+					Entry e4 = new Entry(sc1,"pass1","name4","TestEntry#4","comment","url",-1);
 		}
 }
 
