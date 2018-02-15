@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.khizhny.freepasswordkeeper.LoginActivity.LOG;
 
-
+@SuppressWarnings("ConstantConditions")
 public class DbHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "database.db";
@@ -20,7 +20,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		private static final String TABLE_USERS = "users";
 		private static final String TABLE_CATEGORIES = "categories";
-		private static final String TABLE_ENRIES = "entries";
+		private static final String TABLE_ENTRIES = "entries";
 
 		private SQLiteDatabase db;
 		private static DbHelper instance;
@@ -66,7 +66,7 @@ public class DbHelper extends SQLiteOpenHelper {
 								" FOREIGN KEY(user_id) REFERENCES users(_id)\n" +
 								" )");
 
-				db.execSQL("CREATE TABLE "+TABLE_ENRIES+" (\n" +
+				db.execSQL("CREATE TABLE "+ TABLE_ENTRIES +" (\n" +
 								" `_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
 								" `password` TEXT NOT NULL,\n" +
 								" `login` TEXT NOT NULL,\n" +
@@ -86,7 +86,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-				Log.d(LOG, "dbhelper.onUpgrade() "+oldVersion+"to"+newVersion);
+				Log.d(LOG, "db.onUpgrade() "+oldVersion+"to"+newVersion);
 				switch (oldVersion){
 						case 1:
 								// db.execSQL("ALTER TABLE banks ADD COLUMN editable;");
@@ -99,7 +99,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				String tableName="";
 				if (node instanceof User) tableName= TABLE_USERS;
 				if (node instanceof Category) tableName=TABLE_CATEGORIES;
-				if (node instanceof Entry) tableName=TABLE_ENRIES;
+				if (node instanceof Entry) tableName= TABLE_ENTRIES;
 
 				if (node.id<0){ // new
 						long rowId = getWritableDatabase().insertOrThrow(tableName, null, node.getContentValues());
@@ -140,14 +140,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 
 		/**
-		 * Gets User from DB with binded root category
+		 * Gets User from DB with bind root category
 		 * @param userId -ID
 		 * @param withChildren - If true all entries and subFolders is also loaded
-		 * @return
+		 * @return user
 		 */
 		@Nullable
 		public synchronized User getUser(int userId,boolean withChildren, String password, String login){
-				Cursor c=getWritableDatabase().query(TABLE_USERS,new String[]{"name","name_encrypted"},"_id=?",new String[]{userId+""},null,null,"name desc");
+				Cursor c=getWritableDatabase().query(TABLE_USERS,new String[]{"name","name_encrypted"},"_id=?",new String[]{userId+""},null,null,null);
 				User user=null;
 				while (c.moveToNext()){
 						user=new User(c.getString(0),userId);
@@ -155,6 +155,7 @@ public class DbHelper extends SQLiteOpenHelper {
 						getRootCategory(user, withChildren);
 				}
 				c.close();
+
 				return user;
 		}
 
@@ -163,7 +164,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		 * @param category Category
 		 */
 		private synchronized void getEntries(Category category){
-				Cursor c=getWritableDatabase().query(TABLE_ENRIES,new String[]{"_id","password","login", "url","comment","name"},"category_id=?",new String[]{category.id+""},null,null,"name desc");
+				Cursor c=getWritableDatabase().query(TABLE_ENTRIES,new String[]{"_id","password","login", "url","comment","name"},"category_id=?",new String[]{category.id+""},null,null,null);
 				while (c.moveToNext()){
 						Decrypter d= category.user.decrypter;
 						int entryId=c.getInt(0);
@@ -195,7 +196,7 @@ public class DbHelper extends SQLiteOpenHelper {
 								new String[]{"name","_id"},
 								"user_id=? and parent_id=?",
 								new String[]{parentCategory.user.id+"",parentCategory.id+""},
-								null,null,"name desc");
+								null,null,null);
 				while (c.moveToNext()){
 						String name=c.getString(0);
 						int id=c.getInt(1);
@@ -230,7 +231,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 
 		public synchronized List<User> getAllUsers(){
-				List<User> result=new ArrayList<User>();
+				List<User> result= new ArrayList<>();
 
 				Cursor c=getWritableDatabase().query(TABLE_USERS,new String[]{"name","_id","name_encrypted"},null,null,null,null,null);
 				while (c.moveToNext()){
@@ -247,7 +248,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		public synchronized void deleteUserInfo(int userID){
 				SQLiteDatabase db=getWritableDatabase();
-				db.execSQL("DELETE FROM "+TABLE_ENRIES+" WHERE category_id IN (SELECT _id FROM categories WHERE user_id="+userID+")");
+				db.execSQL("DELETE FROM "+ TABLE_ENTRIES +" WHERE category_id IN (SELECT _id FROM categories WHERE user_id="+userID+")");
 				db.execSQL("DELETE FROM "+TABLE_CATEGORIES+" WHERE user_id=" + userID);
 				db.execSQL("DELETE FROM "+TABLE_USERS+" WHERE _id=" + userID);
 		}
@@ -255,7 +256,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		public synchronized void deleteEntry(Entry entry){
 				//removing from db
 				SQLiteDatabase db=getWritableDatabase();
-				db.execSQL("DELETE FROM "+TABLE_ENRIES+" WHERE _id="+entry.id);
+				db.execSQL("DELETE FROM "+ TABLE_ENTRIES +" WHERE _id="+entry.id);
 				// removing from list
 				((Category)entry.parent).entryList.remove(entry);
 		}

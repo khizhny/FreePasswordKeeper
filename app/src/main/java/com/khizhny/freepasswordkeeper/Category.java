@@ -8,9 +8,9 @@ import java.util.List;
 class Category extends Node {
 
 
-		List<Entry> entryList = new ArrayList<>();  // Entries stored in category
-		List<Category> categoryList = new ArrayList<>(); // subCategories
-		User user; // back reference to user
+		final List<Entry> entryList = new ArrayList<>();  // Entries stored in category
+		final List<Category> categoryList = new ArrayList<>(); // subCategories
+		final User user; // back reference to user
 
 
 

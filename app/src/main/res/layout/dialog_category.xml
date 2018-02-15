@@ -12,11 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:drawableLeft="@drawable/ic_folder"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/ic_folder"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/name"
+        android:text="@string/new_folder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="LabelFor" />
 </android.support.constraint.ConstraintLayout>

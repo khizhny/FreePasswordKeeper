@@ -14,18 +14,20 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+@SuppressWarnings("ConstantConditions")
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+
 		@Test
 		public void useAppContext() throws Exception {
 				// Context of the app under test.
 				Context appContext = InstrumentationRegistry.getTargetContext();
-				DbHelper db = new DbHelper(appContext);
+				DbHelper db = DbHelper.getInstance(appContext);
 				User user1=new User("user1",5);
-
-				db.addOrEditUser(user1);
-				User user2 = db.getUser(5);
-				assertEquals(user2.toString(), user1.toString());
+				user1.decrypter=new Decrypter("pass","login");
+				db.addOrEditNode(user1,false);
+				User user2 = db.getUser(5,false,"pass","login");
+				assertEquals(user2.name, user1.name);
 		}
 
 		@Test

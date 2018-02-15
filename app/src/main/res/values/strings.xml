@@ -1,32 +1,38 @@
 <resources>
-
     <!-- Strings common for all activities -->
     <string name="app_name">Password Keeper</string>
     <string name="image">image</string>
 
-    <!-- Login Activity strings -->
-    <string name="prompt_email">Email</string>
+    <!-- Login Activity -->
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="add_user">Add user</string>
+    <string name="delete_user">Delete user</string>
 
     <!-- Main activity strings -->
     <string name="title_activity_main">Password Keeper</string>
+    <string name="add_folder">Add folder</string>
+    <string name="exit_warn">Click once more to exit.</string>
 
-    <!-- Entry Dialog strings -->
+    <!-- Common Dialog strings -->
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
+    <!-- Entry Dialog -->
+    <string name="entry">Entry</string>
     <string name="comment">Comment</string>
     <string name="url">URL</string>
     <string name="login">Login</string>
-    <string name="password">Password</string>
-    <string name="name">name</string>
     <string name="msg_clipboard">Password copied to clipboard</string>
-    <string name="add_folder">Add folder</string>
-    <string name="delete">Delete</string>
-    <string name="save">Save</string>
-    <string name="exit_warn">Click once more to exit.</string>
+    <string name="long_press_for_pass">Long press for strong password.</string>
+
+    <!-- New user Dialog strings -->
+    <string name="new_user">New user</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <!-- New category Dialog strings -->
+    <string name="new_folder">New folder</string>
     <string name="folder">Folder</string>
 
 </resources>

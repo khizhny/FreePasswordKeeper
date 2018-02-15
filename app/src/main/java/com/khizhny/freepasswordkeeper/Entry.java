@@ -11,7 +11,7 @@ class Entry extends Node {
 		String comment="";
 
 		// references
-		User user=null; //Back ref to user
+		private User user=null; //Back ref to user
 
 		Entry(Category category, String password,String login,String name,String comment,String url,int id){
 				this.password=password;
@@ -26,8 +26,8 @@ class Entry extends Node {
 		}
 
 		/**
-		 * Gets encrypted values for db
-		 * @return
+		 *
+		 * @return encrypted values for db
 		 */
 		@Override
 		public ContentValues getContentValues(){

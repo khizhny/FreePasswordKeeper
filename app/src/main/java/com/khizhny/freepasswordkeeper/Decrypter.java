@@ -21,6 +21,8 @@ import javax.crypto.SecretKeyFactory;
 
 class Decrypter {
 
+		private static final String PBKDF_2_WITH_HMAC_SHA_1 = "PBKDF2WithHmacSHA1";
+		private static final String AES_CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";
 		private Cipher cipher;
 		private static final int ITERATION_COUNT = 1024;
 		private static final int KEY_STRENGTH = 128;  //  Maximum allowed key length
@@ -30,12 +32,12 @@ class Decrypter {
 		Decrypter(String passPhrase, String login) {
 				SecretKeyFactory factory;
 				try {
-						factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+						factory = SecretKeyFactory.getInstance(PBKDF_2_WITH_HMAC_SHA_1);
 						byte[] salt = (login+"1234567890123456").substring(0,16).getBytes(); // extending salt to 16 bytes
 						KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, ITERATION_COUNT, KEY_STRENGTH);
 						SecretKey tmp = factory.generateSecret(spec);
 						key = new SecretKeySpec(tmp.getEncoded(), "AES");
-						cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+						cipher = Cipher.getInstance(AES_CBC_PKCS5_PADDING);
 				} catch (NoSuchAlgorithmException e) {
 						e.printStackTrace();
 				} catch (InvalidKeySpecException e) {
@@ -80,4 +82,5 @@ class Decrypter {
 						return "";
 				}
 		}
+
 }
