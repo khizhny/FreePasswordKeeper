@@ -253,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
 		private void showEntryDialog(@Nullable final Entry entry) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setView(R.layout.dialog_entry);
-				builder.setTitle(R.string.entry);
 				builder.setPositiveButton(R.string.save,
 								new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
@@ -358,7 +357,6 @@ public class MainActivity extends AppCompatActivity {
 		private void showCategoryDialog(@Nullable final Category category) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setView(R.layout.dialog_category);
-				builder.setTitle(R.string.folder);
 				builder.setPositiveButton(R.string.save,
 								new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {

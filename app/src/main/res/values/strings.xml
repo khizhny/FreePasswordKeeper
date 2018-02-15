@@ -1,15 +1,16 @@
 <resources>
     <!-- Strings common for all activities -->
-    <string name="app_name">Password Keeper</string>
+    <string name="app_name">Pass Keeper</string>
     <string name="image">image</string>
 
     <!-- Login Activity -->
+    <string name="login_activity_title">Welcome</string>
     <string name="prompt_password">Password</string>
     <string name="add_user">Add user</string>
     <string name="delete_user">Delete user</string>
 
     <!-- Main activity strings -->
-    <string name="title_activity_main">Password Keeper</string>
+    <string name="title_activity_main">Passwords</string>
     <string name="add_folder">Add folder</string>
     <string name="exit_warn">Click once more to exit.</string>
 
@@ -18,7 +19,6 @@
     <string name="delete">Delete</string>
 
     <!-- Entry Dialog -->
-    <string name="entry">Entry</string>
     <string name="comment">Comment</string>
     <string name="url">URL</string>
     <string name="login">Login</string>
@@ -26,13 +26,15 @@
     <string name="long_press_for_pass">Long press for strong password.</string>
 
     <!-- New user Dialog strings -->
-    <string name="new_user">New user</string>
     <string name="password">Password</string>
     <string name="name">Name</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="create">Create</string>
 
     <!-- New category Dialog strings -->
     <string name="new_folder">New folder</string>
-    <string name="folder">Folder</string>
+
+    <!-- Unsorted -->
+
 
 </resources>

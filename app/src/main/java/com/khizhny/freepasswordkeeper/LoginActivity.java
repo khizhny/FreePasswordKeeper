@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity{
 				// Set up the login form.
 				usersView = findViewById(R.id.login);
 
+				setTitle(getString(R.string.login_activity_title));
 				passwordView = findViewById(R.id.password);
 				passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 						@Override
@@ -109,9 +110,8 @@ public class LoginActivity extends AppCompatActivity{
 
 		private void showNewUserDialog() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(R.string.new_user);
 				builder.setView(R.layout.dialog_new_user);
-				builder.setPositiveButton("Save",
+				builder.setPositiveButton(R.string.create,
 								new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
 												//noinspection ConstantConditions
