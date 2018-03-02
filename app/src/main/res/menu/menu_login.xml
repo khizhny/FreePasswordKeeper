@@ -13,9 +13,4 @@
         android:orderInCategory="101"
         app:showAsAction="never"
         />
-    <item android:title="@string/change_password"
-        android:id="@+id/action_change_password"
-        android:orderInCategory="102"
-        app:showAsAction="never"
-        />
 </menu>

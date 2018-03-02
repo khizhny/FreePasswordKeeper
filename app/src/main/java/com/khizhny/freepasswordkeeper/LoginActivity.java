@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity{
 								intent.putExtra("user_id", user.id );
 								intent.putExtra("password", pass);
 								intent.putExtra("login", user.name);
+								passwordView.setText(""); // removing correct password
 								startActivity(intent);
 						} else{
 								Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_LONG).show();

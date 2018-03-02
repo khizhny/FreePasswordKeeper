@@ -216,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
 				GoogleSignInOptions signInOptions =	new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 								.requestScopes(Drive.SCOPE_FILE)
 								.build();
-
 				GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
 		}
 
@@ -279,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
 				// Inflate the menu; this adds items to the action bar if it is present.
 				getMenuInflater().inflate(R.menu.menu_main, menu);
 				this.menu=menu;
+				menu.findItem(R.id.action_edit_folder).setEnabled(currentCategory!=user.rootCategory);
 				switchSelectionMode(false);
 				return true;
 		}
@@ -447,18 +447,20 @@ public class MainActivity extends AppCompatActivity {
 												@Override
 												public void onClick(View v) {
 														Node n = (Node) v.getTag();
-														if (n instanceof Category) {
-																if (n == backNode) { // navigating back on tree
-																		currentCategory = (Category) currentCategory.parent;
-																} else {  // navigating forward on tree
-																		if (!selectedNodes.contains(n)) {
-																				currentCategory = (Category) n;
+														if (!selectedNodes.contains(n)){
+																if (n instanceof Category) {
+																		if (n == backNode) { // navigating back on tree
+																				currentCategory = (Category) currentCategory.parent;
+																		} else {  // navigating forward on tree
+																				if (!selectedNodes.contains(n)) {
+																						currentCategory = (Category) n;
+																				}
 																		}
+																		refreshTree();
 																}
-																refreshTree();
-														}
-														if (n instanceof Entry) {
-																showEntryDialog((Entry) n);
+																if (n instanceof Entry) {
+																		showEntryDialog((Entry) n);
+																}
 														}
 												}
 										});
@@ -671,6 +673,8 @@ public class MainActivity extends AppCompatActivity {
 		private void refreshTree(){
 				listView.setAdapter(new ListAdapter(getNodes()));
 				((ListAdapter)listView.getAdapter()).notifyDataSetChanged();
+				MenuItem editFolder	= menu.findItem(R.id.action_edit_folder);
+				if (editFolder!=null) editFolder.setEnabled(currentCategory!=user.rootCategory);
 		}
 		
 		private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener, DialogInterface.OnClickListener cancelListener) {
@@ -861,7 +865,7 @@ public class MainActivity extends AppCompatActivity {
 								myInputs.close();
 								Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
 								dbCopy.delete();
-								restart();
+								finish(); // going back to Login activity
 						} catch (FileNotFoundException e) {
 								Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG).show();
 								e.printStackTrace();
