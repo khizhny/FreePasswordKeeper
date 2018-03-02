@@ -62,12 +62,6 @@ public class LoginActivity extends AppCompatActivity{
 		}
 
 		@Override
-		protected void onResume() {
-				super.onResume();
-				refreshUserList();
-		}
-
-		@Override
 		public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
 				super.onSaveInstanceState(outState, outPersistentState);
 				outState.putInt("user_index",usersView.getSelectedItemPosition());
@@ -99,7 +93,7 @@ public class LoginActivity extends AppCompatActivity{
 				}
 		}
 
-			private void refreshUserList(){
+		private void refreshUserList(){
 				List<User> usersList = db.getAllUsers();
 					//noinspection unchecked
 					ArrayAdapter arrayAdapter =new  ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item, usersList);
