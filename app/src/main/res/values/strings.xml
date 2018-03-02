@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Strings common for all activities -->
     <string name="app_name">Pass Keeper</string>
     <string name="image">image</string>
@@ -12,7 +12,13 @@
     <!-- Main activity strings -->
     <string name="title_activity_main">Passwords</string>
     <string name="add_folder">Add folder</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
     <string name="exit_warn">Click once more to exit.</string>
+    <string name="edit_folder">Edit folder</string>
+    <string name="edit_user">Edit user</string>
+    <string name="paste">Paste</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Common Dialog strings -->
     <string name="save">Save</string>
@@ -24,15 +30,38 @@
     <string name="login">Login</string>
     <string name="msg_clipboard">Password copied to clipboard</string>
     <string name="long_press_for_pass">Long press for strong password.</string>
-
     <!-- New user Dialog strings -->
     <string name="password">Password</string>
+    <string name="new_password">New password</string>
     <string name="name">Name</string>
     <string name="confirm_password">Confirm password</string>
     <string name="create">Create</string>
-
     <!-- New category Dialog strings -->
     <string name="new_folder">New folder</string>
+    <string name="success">Success.</string>
+    <string name="delete_folder">Delete folder</string>
+    <string name="unlock_first">Unlock first!</string>
+    <string name="delete_selected_items" tools:ignore="PluralsCandidate">Delete selected %d item(s)?</string>
+    <string name="select_zip">Select zip file with backup</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="unzip_error">Unzip failed</string>
+    <string name="unable_to_read_content">Unable to read contents</string>
+    <string name="file_not_found">File not found</string>
+    <string name="file_io_error">File I/O error</string>
+    <string name="db_not_found">DB not found on SD card</string>
+    <string name="sign_in_problems">Google SignIn problems!</string>
+    <string name="unable_to_open_file">Unable to open file</string>
+    <string name="backup_saved_to_sd">Backup saved to SD card</string>
+    <string name="failed_to_create_new_contents_on_drive">Failed to create new contents on Drive.</string>
+    <string name="short_pass">Password too short</string>
+    <string name="passwords_dont_match">Passwords don\'t match.</string>
+    <string name="name_is_too_short">Too short name</string>
+    <string name="wrong_password">Password is wrong</string>
+    <string name="default_folder_forums">Forums</string>
+    <string name="default_folder_credits">Credit cards</string>
+    <string name="default_folder_emails">Mailboxes</string>
+    <string name="default_folder_shops">Online shops</string>
+    <string name="change_password">Change password</string>
 
     <!-- Unsorted -->
 

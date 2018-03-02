@@ -23,7 +23,7 @@ class User extends Node {
 				return cv;
 		}
 
-		public boolean checkPassword(){
+		boolean checkPassword(){
 				return name_encrypted.equals(decrypter.encrypt(name));
 		}
 }

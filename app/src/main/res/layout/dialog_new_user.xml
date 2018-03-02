@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="@string/password"
+        android:hint="@string/new_password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/newUserName"
         app:layout_constraintStart_toStartOf="@+id/newUserName"

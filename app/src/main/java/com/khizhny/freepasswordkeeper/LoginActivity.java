@@ -21,8 +21,8 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity{
 
 		public static final String LOG = "PASS_KEEPER";
-		private static final int MIN_USERNAME_LENGTH = 1;
-		private static final int MIN_USER_PASS_LENGTH = 4;
+		static final int MIN_USERNAME_LENGTH = 1;
+		static final int MIN_USER_PASS_LENGTH = 4;
 
 		// UI references.
 		private Spinner usersView;
@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity{
 								intent.putExtra("login", user.name);
 								startActivity(intent);
 						} else{
-								Toast.makeText(this, "Password is wrong", Toast.LENGTH_LONG).show();
+								Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_LONG).show();
 				    }
 				}
 		}
@@ -121,24 +121,24 @@ public class LoginActivity extends AppCompatActivity{
 												//noinspection ConstantConditions
 												String userPass2=((EditText) ((AlertDialog) dialog).findViewById(R.id.newUserPassword2)).getText().toString();
 												if (userName.length() < MIN_USERNAME_LENGTH) {
-														Toast.makeText(getApplicationContext(), "Too short name", Toast.LENGTH_SHORT).show();
+														Toast.makeText(getApplicationContext(), R.string.name_is_too_short, Toast.LENGTH_SHORT).show();
 														return;
 												}
 												if (userPass.length() < MIN_USER_PASS_LENGTH) {
-														Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_SHORT).show();
+														Toast.makeText(getApplicationContext(), R.string.short_pass, Toast.LENGTH_SHORT).show();
 														return;
 												}
 												if (userPass2.equals(userPass)){
 																alertDialog.dismiss();
 																User user=new User(userName,-1);
 																user.decrypter=new Decrypter(userPass,userName);
-																user.name_encrypted=user.decrypter.encrypt(user.name);
+																user.name_encrypted=user.decrypter.encrypt(userName);
 																addDefaultRecords(user);
 																db.addOrEditNode(user,true);
 																refreshUserList();
 																attemptLogin(user,userPass);
-														}else{
-														Toast.makeText(getApplicationContext(), "Passwords don't match.", Toast.LENGTH_SHORT).show();
+												}else{
+														Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
 												}
 										}
 								});
@@ -147,10 +147,10 @@ public class LoginActivity extends AppCompatActivity{
 		}
 
 		private void addDefaultRecords(User u){
-					new Category(u.rootCategory,"Forums");
-					new Category(u.rootCategory,"Credit cards");
-					new Category(u.rootCategory,"Mailboxes");
-					new Category(u.rootCategory,"Online shops");
+					new Category(u.rootCategory,getString(R.string.default_folder_forums));
+					new Category(u.rootCategory,getString(R.string.default_folder_credits));
+					new Category(u.rootCategory,getString(R.string.default_folder_emails));
+					new Category(u.rootCategory,getString(R.string.default_folder_shops));
 		}
 
 		@Override

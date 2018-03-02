@@ -10,7 +10,12 @@
         />
     <item android:title="@string/delete_user"
         android:id="@+id/action_delete_user"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+        />
+    <item android:title="@string/change_password"
+        android:id="@+id/action_change_password"
+        android:orderInCategory="102"
         app:showAsAction="never"
         />
 </menu>

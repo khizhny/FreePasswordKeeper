@@ -17,7 +17,7 @@ class Entry extends Node {
 				this.password=password;
 				this.login=login;
 				this.parent=category;
-				((Category)(this.parent)).entryList.add(this);
+				this.parent.entryList.add(this);
 				this.user=category.user;
 				this.name=name;
 				this.comment=comment;

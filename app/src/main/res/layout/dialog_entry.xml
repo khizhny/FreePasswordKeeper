@@ -16,7 +16,7 @@
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textNoSuggestions"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/entry_lock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,9 +40,10 @@
         android:id="@+id/entry_generate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/image"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/image"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_login"
         app:srcCompat="@drawable/ic_key" />
@@ -57,6 +58,17 @@
         app:layout_constraintEnd_toStartOf="@+id/entry_generate"
         app:layout_constraintTop_toBottomOf="@+id/entry_login"
         app:srcCompat="@drawable/ic_content_copy" />
+
+    <ImageButton
+        android:id="@+id/entry_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_lock_closed" />
 
     <ImageButton
         android:id="@+id/entry_redirect"

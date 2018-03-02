@@ -2,10 +2,55 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="@string/backup"
+        android:id="@+id/action_backup"
+        android:orderInCategory="95"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_cloud_upload"
+        />
     <item android:title="@string/add_folder"
         android:id="@+id/action_add_folder"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_create_new_folder"
+        android:orderInCategory="96"
+        android:icon="@drawable/ic_folder_add"
         app:showAsAction="ifRoom"
         />
+    <item android:title="@string/edit_folder"
+        android:id="@+id/action_edit_folder"
+        android:orderInCategory="101"
+        android:icon="@drawable/ic_folder_edit"
+        app:showAsAction="ifRoom"
+        />
+    <item android:title="@string/edit_user"
+        android:id="@+id/action_edit_user"
+        android:orderInCategory="102"
+        android:icon="@drawable/ic_edit_user"
+        app:showAsAction="ifRoom"
+        />
+    <item android:title="@string/restore"
+        android:id="@+id/action_restore"
+        android:orderInCategory="104"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_cloud_download"
+        />
+
+    <!-- Visible just while copyPasting-->
+    <item android:title="@string/paste"
+        android:id="@+id/action_selection_paste"
+        android:orderInCategory="991"
+        android:icon="@drawable/ic_paste"
+        app:showAsAction="ifRoom"
+        />
+    <item android:title="@string/cancel"
+        android:id="@+id/action_selection_cancel"
+        android:orderInCategory="992"
+        android:icon="@drawable/ic_cancel"
+        app:showAsAction="ifRoom"
+        />
+    <item android:title="@string/delete"
+        android:id="@+id/action_selection_delete"
+        android:orderInCategory="993"
+        android:icon="@drawable/ic_delete_forever"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>
