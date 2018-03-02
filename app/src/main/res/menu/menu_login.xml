@@ -13,4 +13,14 @@
         android:orderInCategory="101"
         app:showAsAction="never"
         />
+    <item android:title="@string/rate_application"
+        android:id="@+id/action_rate"
+        android:orderInCategory="102"
+        app:showAsAction="never"
+        />
+    <item android:title="@string/privacy_policy"
+        android:id="@+id/action_privacy"
+        android:orderInCategory="104"
+        app:showAsAction="never"
+        />
 </menu>

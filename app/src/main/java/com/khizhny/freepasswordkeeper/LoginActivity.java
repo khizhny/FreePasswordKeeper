@@ -1,12 +1,13 @@
 package com.khizhny.freepasswordkeeper;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity{
@@ -23,6 +25,8 @@ public class LoginActivity extends AppCompatActivity{
 		public static final String LOG = "PASS_KEEPER";
 		static final int MIN_USERNAME_LENGTH = 1;
 		static final int MIN_USER_PASS_LENGTH = 4;
+		public static final String URL_4PDA_PRIVACY = "http://4pda.ru/forum/index.php?showtopic=730676&st=20#entry58120636";
+
 
 		// UI references.
 		private Spinner usersView;
@@ -155,9 +159,31 @@ public class LoginActivity extends AppCompatActivity{
 				return true;
 		}
 
+		private void goToMarket(){
+				Uri uri = Uri.parse("market://details?id=" + getPackageName());
+				Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+				// To count with Play market backstack, After pressing back button,
+				// to taken back to our application, we need to add following flags to intent.
+				goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+				try {
+						startActivity(goToMarket);
+				} catch (ActivityNotFoundException e) {
+						startActivity(new Intent(Intent.ACTION_VIEW,
+										Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+				}
+		}
+
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 				switch(item.getItemId()){
+						case R.id.action_privacy:
+								Intent i = new Intent(Intent.ACTION_VIEW);
+								i.setData(Uri.parse(URL_4PDA_PRIVACY));
+								startActivity(i);
+									return true;
+						case R.id.action_rate:
+								goToMarket();
+								break;
 						case R.id.action_add_user:
 								showNewUserDialog();
 								return true;

@@ -62,6 +62,8 @@
     <string name="default_folder_emails">Mailboxes</string>
     <string name="default_folder_shops">Online shops</string>
     <string name="change_password">Change password</string>
+    <string name="rate_application">Rate application</string>
+    <string name="privacy_policy">Privacy policy</string>
 
     <!-- Unsorted -->
 
