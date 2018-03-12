@@ -32,6 +32,16 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_cloud_download"
         />
+    <item android:title="@string/rate_application"
+        android:id="@+id/action_rate"
+        android:orderInCategory="106"
+        app:showAsAction="never"
+        />
+    <item android:title="@string/privacy_policy"
+        android:id="@+id/action_privacy"
+        android:orderInCategory="107"
+        app:showAsAction="never"
+        />
 
     <!-- Visible just while copyPasting-->
     <item android:title="@string/paste"

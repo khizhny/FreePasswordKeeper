@@ -30,7 +30,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textNoSuggestions"
-        app:layout_constraintEnd_toStartOf="@+id/entry_copy"
+        app:layout_constraintEnd_toStartOf="@+id/entry_generate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_login"
@@ -42,21 +42,30 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/image"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="entry_generate"
+        app:layout_constraintEnd_toStartOf="@+id/entry_copy_pass"
         app:layout_constraintTop_toBottomOf="@+id/entry_login"
         app:srcCompat="@drawable/ic_key" />
 
     <ImageButton
-        android:id="@+id/entry_copy"
+        android:id="@+id/entry_copy_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/image"
-        app:layout_constraintEnd_toStartOf="@+id/entry_generate"
+        android:contentDescription="entry_copy_pass"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_login"
+        app:srcCompat="@drawable/ic_content_copy" />
+
+    <ImageButton
+        android:id="@+id/entry_copy_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="entry_copy_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/entry_login"
         app:srcCompat="@drawable/ic_content_copy" />
 
     <ImageButton
@@ -65,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/image"
+        android:contentDescription="entry_lock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_lock_closed" />
@@ -75,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:contentDescription="@string/image"
+        android:contentDescription="entry_redirect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/entry_url"
         app:srcCompat="@drawable/ic_globe" />
@@ -90,7 +99,7 @@
         android:ems="10"
         android:hint="@string/login"
         android:inputType="textNoSuggestions"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/entry_copy_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entry_name" />
 

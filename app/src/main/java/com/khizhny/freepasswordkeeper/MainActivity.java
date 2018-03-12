@@ -81,6 +81,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.khizhny.freepasswordkeeper.LoginActivity.MIN_USERNAME_LENGTH;
 import static com.khizhny.freepasswordkeeper.LoginActivity.MIN_USER_PASS_LENGTH;
+import static com.khizhny.freepasswordkeeper.LoginActivity.URL_4PDA_PRIVACY;
+import static com.khizhny.freepasswordkeeper.LoginActivity.goToMarket;
 
 
 @SuppressWarnings("ALL")
@@ -292,6 +294,8 @@ public class MainActivity extends AppCompatActivity {
 						menu.removeItem(R.id.action_backup);
 						menu.removeItem(R.id.action_add_folder);
 						menu.removeItem(R.id.action_restore);
+						menu.removeItem(R.id.action_rate);
+						menu.removeItem(R.id.action_privacy);
 				}else{
 						menu.removeItem(R.id.action_selection_paste);
 						menu.removeItem(R.id.action_selection_delete);
@@ -354,6 +358,14 @@ public class MainActivity extends AppCompatActivity {
 									refreshTree();
 							}
 							return true;
+						case R.id.action_privacy:
+								Intent i = new Intent(Intent.ACTION_VIEW);
+								i.setData(Uri.parse(URL_4PDA_PRIVACY));
+								startActivity(i);
+								return true;
+						case R.id.action_rate:
+								goToMarket(this);
+								return true;
 				}
 
 				return super.onOptionsItemSelected(item);
@@ -554,6 +566,7 @@ public class MainActivity extends AppCompatActivity {
 						}
 				});
 				alertDialog.show();
+
 				if (entry!=null) {
 						//noinspection ConstantConditions
 						((EditText)alertDialog.findViewById(R.id.entry_name)).setText(entry.name);
@@ -563,13 +576,25 @@ public class MainActivity extends AppCompatActivity {
 						((EditText)alertDialog.findViewById(R.id.entry_password)).setText(entry.password);
 				}
 
-				alertDialog.findViewById(R.id.entry_copy).setOnClickListener(new View.OnClickListener() {
+				alertDialog.findViewById(R.id.entry_copy_pass).setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 								//noinspection ConstantConditions
 								String password = ((EditText)alertDialog.findViewById(R.id.entry_password)).getText().toString();
 								ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 								ClipData clip = ClipData.newPlainText(password, password);
+								clipboard.setPrimaryClip(clip);
+								Toast.makeText(MainActivity.this, getString(R.string.msg_clipboard),Toast.LENGTH_SHORT).show();
+						}
+				});
+
+				alertDialog.findViewById(R.id.entry_copy_login).setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+								//noinspection ConstantConditions
+								String login = ((EditText)alertDialog.findViewById(R.id.entry_login)).getText().toString();
+								ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+								ClipData clip = ClipData.newPlainText(login, login);
 								clipboard.setPrimaryClip(clip);
 								Toast.makeText(MainActivity.this, getString(R.string.msg_clipboard),Toast.LENGTH_SHORT).show();
 						}
@@ -593,7 +618,9 @@ public class MainActivity extends AppCompatActivity {
 						}
 				});
 
-				alertDialog.findViewById(R.id.entry_generate).setOnClickListener(new View.OnClickListener() {
+				ImageButton generate = alertDialog.findViewById(R.id.entry_generate);
+				generate.setVisibility(editMode ? View.VISIBLE : View.GONE);
+				generate.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 								String password =Gpw.generate(12); // pronounceable password
@@ -604,8 +631,7 @@ public class MainActivity extends AppCompatActivity {
 								Toast.makeText(MainActivity.this, getString(R.string.long_press_for_pass),Toast.LENGTH_SHORT).show();
 						}
 				});
-
-				alertDialog.findViewById(R.id.entry_generate).setOnLongClickListener(new View.OnLongClickListener() {
+				generate.setOnLongClickListener(new View.OnLongClickListener() {
 						@Override
 						public boolean onLongClick(View v) {
 								String password= pwGenerator.generatePassword(); // Strong password
@@ -680,8 +706,8 @@ public class MainActivity extends AppCompatActivity {
 		private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener, DialogInterface.OnClickListener cancelListener) {
 				new AlertDialog.Builder(this)
 								.setMessage(message)
-								.setPositiveButton("OK", okListener)
-								.setNegativeButton("Cancel", cancelListener)
+								.setPositiveButton(R.string.ok, okListener)
+								.setNegativeButton(R.string.cancel, cancelListener)
 								.create()
 								.show();
 		}
@@ -768,12 +794,6 @@ public class MainActivity extends AppCompatActivity {
 		private void restoreFromDrive() {
 				// Launch user interface and allow user to select file
 				pickZipFile()
-								/*.addOnCompleteListener(new OnCompleteListener<DriveId>() {
-										@Override
-										public void onComplete(@NonNull Task<DriveId> task) {
-												Toast.makeText(MainActivity.this, "No file selected", Toast.LENGTH_LONG).show();
-										}
-								})*/
 								.addOnSuccessListener(this,
 												new OnSuccessListener<DriveId>() {
 														@Override

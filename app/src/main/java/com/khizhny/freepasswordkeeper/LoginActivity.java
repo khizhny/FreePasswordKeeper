@@ -1,6 +1,7 @@
 package com.khizhny.freepasswordkeeper;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,6 +36,14 @@ public class LoginActivity extends AppCompatActivity{
 		private AlertDialog alertDialog;
 
 		@Override
+		protected void onResume() {
+				super.onResume();
+				db=DbHelper.getInstance(this);
+				db.open();
+				refreshUserList();
+		}
+
+		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.activity_login);
@@ -53,16 +62,10 @@ public class LoginActivity extends AppCompatActivity{
 								return false;
 						}
 				});
-
-				db=DbHelper.getInstance(this);
-				db.open();
-				refreshUserList();
-
 				if (savedInstanceState!=null) {
 						passwordView.setText(savedInstanceState.getString("user_pass"));
 						usersView.setSelection(savedInstanceState.getInt("user_index"));
 				}
-
 		}
 
 		@Override
@@ -159,17 +162,17 @@ public class LoginActivity extends AppCompatActivity{
 				return true;
 		}
 
-		private void goToMarket(){
-				Uri uri = Uri.parse("market://details?id=" + getPackageName());
+		static void goToMarket(Context ctx){
+				Uri uri = Uri.parse("market://details?id=" + ctx.getPackageName());
 				Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
 				// To count with Play market backstack, After pressing back button,
 				// to taken back to our application, we need to add following flags to intent.
 				goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 				try {
-						startActivity(goToMarket);
+						ctx.startActivity(goToMarket);
 				} catch (ActivityNotFoundException e) {
-						startActivity(new Intent(Intent.ACTION_VIEW,
-										Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+						ctx.startActivity(new Intent(Intent.ACTION_VIEW,
+										Uri.parse("http://play.google.com/store/apps/details?id=" + ctx.getPackageName())));
 				}
 		}
 
@@ -182,7 +185,7 @@ public class LoginActivity extends AppCompatActivity{
 								startActivity(i);
 									return true;
 						case R.id.action_rate:
-								goToMarket();
+								goToMarket(this);
 								break;
 						case R.id.action_add_user:
 								showNewUserDialog();
@@ -190,13 +193,28 @@ public class LoginActivity extends AppCompatActivity{
 						case R.id.action_delete_user:
 								User u = (User) usersView.getSelectedItem();
 								if (u!=null) {
-										db.deleteUserInfo(u.id);
-										refreshUserList();
+										showMessageOKCancel(getString(R.string.are_you_sure), new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialog, int which) {
+														db.deleteUserInfo(u.id);
+														refreshUserList();
+												}
+										}, null);
 								}
 								break;
 				}
 
 				return super.onOptionsItemSelected(item);
 		}
+
+		private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener, DialogInterface.OnClickListener cancelListener) {
+				new AlertDialog.Builder(this)
+								.setMessage(message)
+								.setPositiveButton(R.string.ok, okListener)
+								.setNegativeButton(R.string.cancel, cancelListener)
+								.create()
+								.show();
+		}
+
 }
 
