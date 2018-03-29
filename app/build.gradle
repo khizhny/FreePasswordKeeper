@@ -4,10 +4,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.khizhny.freepasswordkeeper"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 27
-        versionCode 101
-        versionName '1.01'
+        versionCode 102
+        versionName '1.02'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
