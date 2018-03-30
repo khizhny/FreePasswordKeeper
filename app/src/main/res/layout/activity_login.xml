@@ -43,6 +43,24 @@
             app:layout_constraintStart_toStartOf="@+id/login"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/fingerprint_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:contentDescription="fingerprint image"
+            android:visibility="visible"
+            app:srcCompat="@mipmap/ic_fp" />
+
+        <TextView
+            android:id="@+id/fingerprint_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="16dp" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -65,5 +65,9 @@
     <string name="rate_application">Rate application</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="enable_fingerprint">Enable fingerprint</string>
 
+    <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
+    <string name="fingerprint_success">Fingerprint recognized</string>
+    <string name="fingerprint_hint">Touch sensor</string>
 </resources>

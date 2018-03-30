@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -445,11 +446,12 @@ public class MainActivity extends AppCompatActivity {
 								if (node!=null) {
 										rowView.setTag(node);
 										TextView entryText = rowView.findViewById(R.id.entry_text);
-										entryText.setText(node.name);
+									    ImageView entryIcon = rowView.findViewById(R.id.entry_icon);
+									    entryText.setText(node.name);
 										int icon = 0;
 										if (node instanceof Category) icon = R.drawable.ic_folder;
 										if (node instanceof Entry) icon = R.drawable.ic_key;
-										entryText.setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null);
+										entryIcon.setImageResource(icon);
 										if (selectedNodes.contains(node)) {
 												entryText.setPaintFlags(entryText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 										}else{
