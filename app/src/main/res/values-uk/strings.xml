@@ -1,0 +1,77 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings common for all activities -->
+    <string name="app_name">Pass Keeper</string>
+
+    <!-- Login Activity -->
+    <string name="login_activity_title">Слава Україні!</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="add_user">Додати користувача</string>
+    <string name="delete_user">Видалити користувача</string>
+
+    <!-- Main activity strings -->
+    <string name="title_activity_main">Паролі</string>
+    <string name="add_folder">Додати папку</string>
+    <string name="backup">Сробити резервну копію</string>
+    <string name="restore">Відновити з резервної копії</string>
+    <string name="exit_warn">Натисни знову для виходу.</string>
+    <string name="edit_folder">Редагувати папку</string>
+    <string name="edit_user">Редагувати користувача</string>
+    <string name="paste">Вставити</string>
+    <string name="cancel">Відміна</string>
+
+    <!-- Common Dialog strings -->
+    <string name="save">Зберігти</string>
+    <string name="delete">Видалити</string>
+
+    <!-- Entry Dialog -->
+    <string name="comment">Коментар</string>
+    <string name="url">URL</string>
+    <string name="login">Логін</string>
+    <string name="msg_clipboard">Скопійовано до буфера</string>
+    <string name="long_press_for_pass">Довгий тап для міцнішого паролю.</string>
+    <!-- New user Dialog strings -->
+    <string name="password">Пароль</string>
+    <string name="new_password">Новий пароль</string>
+    <string name="name">Ім\'я</string>
+    <string name="confirm_password">Павтори пароль</string>
+    <string name="create">Створити</string>
+    <!-- New category Dialog strings -->
+    <string name="new_folder">Нова папка</string>
+    <string name="success">Успіх!</string>
+    <string name="delete_folder">Видалити папку</string>
+    <string name="unlock_first">Спочатку розблокуй!</string>
+    <string name="delete_selected_items" tools:ignore="PluralsCandidate">Видалити обраний(і) %d елемент(ів)?</string>
+    <string name="select_zip">Обери zip файл з резервною копією.</string>
+    <string name="no_file_selected">Файл не обрано</string>
+    <string name="unzip_error">Невдача при розархівації</string>
+    <string name="unable_to_read_content">Неможливо прочитати вміст</string>
+    <string name="file_not_found">Файл не знайдено</string>
+    <string name="file_io_error">Помилка введення/виведення.</string>
+    <string name="db_not_found">СУБД не знайдено на SD карті</string>
+    <string name="sign_in_problems">Проблема авторизації в Google Drive!</string>
+    <string name="unable_to_open_file">Неможливо прочитати файл</string>
+    <string name="backup_saved_to_sd">Резервна копія збережена на SD карті</string>
+    <string name="failed_to_create_new_contents_on_drive">Неможливо створити контент на Google Drive.</string>
+    <string name="short_pass">Пароль занадто короткий</string>
+    <string name="passwords_dont_match">Паролі не збігаються.</string>
+    <string name="name_is_too_short">Занадто коротке ім\'я</string>
+    <string name="wrong_password">Пароль невірний</string>
+    <string name="default_folder_forums">Форуми</string>
+    <string name="default_folder_credits">Банківськи картки</string>
+    <string name="default_folder_emails">E-пошта</string>
+    <string name="default_folder_shops">Online крамниці</string>
+    <string name="change_password">Змінити пароль</string>
+    <string name="rate_application">Оцінити програму</string>
+    <string name="privacy_policy">Політика конфіденційності</string>
+    <string name="ok">Так</string>
+    <string name="are_you_sure">Ви впевнені?</string>
+    <string name="logout">Вийти</string>
+    <string name="fingerprint_hint">Доторкнися сенсора</string>
+    <string name="fingerprint_success">Відбиток прийнятий</string>
+    <string name="fingerprint_not_recognized">Відбиток не прийнятий. Повторить спробу.</string>
+    <string name="enable_fingerprint">Вкл. сенсор відбитків</string>
+
+    <!-- Unsorted -->
+
+
+</resources>

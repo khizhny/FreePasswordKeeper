@@ -1,0 +1,74 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings common for all activities -->
+    <string name="app_name">Pass Keeper</string>
+
+    <!-- Login Activity -->
+    <string name="login_activity_title">Привет</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="add_user">Добавить пользователя</string>
+    <string name="delete_user">Удалить пользователя</string>
+
+    <!-- Main activity strings -->
+    <string name="title_activity_main">Пароли</string>
+    <string name="add_folder">Создать папку</string>
+    <string name="backup">Сделать резервную копию</string>
+    <string name="restore">Восстановить из резервной копии</string>
+    <string name="exit_warn">Нажмите еще раз для выхода</string>
+    <string name="edit_folder">Редактировать папку</string>
+    <string name="edit_user">Редактировать пользователя</string>
+    <string name="paste">Вставить</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Common Dialog strings -->
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+
+    <!-- Entry Dialog -->
+    <string name="comment">Комментарий</string>
+    <string name="url">URL</string>
+    <string name="login">Логин</string>
+    <string name="msg_clipboard">Скопировано в буфер</string>
+    <string name="long_press_for_pass">Долгий тап для создания сильного пароля.</string>
+    <!-- New user Dialog strings -->
+    <string name="password">Пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="name">Имя</string>
+    <string name="confirm_password">Повторите пароль</string>
+    <string name="create">Создать</string>
+    <!-- New category Dialog strings -->
+    <string name="new_folder">Новая папка</string>
+    <string name="success">Успешно.</string>
+    <string name="delete_folder">Удалить папку</string>
+    <string name="unlock_first">Сначала разблокируйте!</string>
+    <string name="delete_selected_items" tools:ignore="PluralsCandidate">Удалить выбранный(ые) %d элемент(ы)?</string>
+    <string name="select_zip">Выбелите ZIP архив с резервной копией</string>
+    <string name="no_file_selected">Файл не выбран</string>
+    <string name="unzip_error">Распаковка не удалась</string>
+    <string name="unable_to_read_content">Неудалось прочесть содержимое</string>
+    <string name="file_not_found">Файл не найден</string>
+    <string name="file_io_error">Ошибка ввода/вывода</string>
+    <string name="db_not_found">На SD карте не найден файл с БД</string>
+    <string name="sign_in_problems">Проблева авторизации в Google Drive!</string>
+    <string name="unable_to_open_file">Не удалось открыть файл</string>
+    <string name="backup_saved_to_sd">Копия сохранена на SD карту</string>
+    <string name="failed_to_create_new_contents_on_drive">Неудалось создать новое содержимое на Google Drive.</string>
+    <string name="short_pass">Слишком маленький пароль</string>
+    <string name="passwords_dont_match">Пароли не совпадают</string>
+    <string name="name_is_too_short">Слишком короткое имя</string>
+    <string name="wrong_password">Неверный пароль</string>
+    <string name="default_folder_forums">Форумы</string>
+    <string name="default_folder_credits">Банковские карты</string>
+    <string name="default_folder_emails">Электронная Почта</string>
+    <string name="default_folder_shops">Online магазины</string>
+    <string name="change_password">Сменить пароль</string>
+    <string name="rate_application">Оценить программу</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="ok">Да</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="logout">Выйти</string>
+    <string name="fingerprint_hint">Коснитесь сенсора</string>
+    <string name="fingerprint_success">Отпечаток принят</string>
+    <string name="enable_fingerprint">Вкл. сенсор отпечатков</string>
+    <string name="fingerprint_not_recognized">Отпечаток не принят. Попробуйте снова.</string>
+
+</resources>
