@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
 
 		@Test
-		public void useAppContext() throws Exception {
+		public void useAppContext()  {
 				// Context of the app under test.
 				Context appContext = InstrumentationRegistry.getTargetContext();
 				DbHelper db = DbHelper.getInstance(appContext);
@@ -31,7 +31,7 @@ public class ExampleInstrumentedTest {
 		}
 
 		@Test
-		public void EncryptionTest() throws  Exception {
+		public void EncryptionTest()  {
 				String text="the quick brown fox jumps over the lazy dog";
 				Decrypter decrypter = new Decrypter("pass1","user1");
 				String encrypted = decrypter.encrypt(text);
@@ -39,7 +39,7 @@ public class ExampleInstrumentedTest {
 		}
 
 		@Test
-		public void DecryptionTest() throws  Exception {
+		public void DecryptionTest()  {
 				Decrypter decrypter = new Decrypter("pass1","user1");
 				String decrypted = decrypter.decrypt("ZpVd4G/2PUsbpFY7RCDb9D8yZTA2AMhUVM2eko6bvt/E5E0bAqUKkIsFxo81sMtO\n");/**/
 				assertEquals ("the quick brown fox jumps over the lazy dog",decrypted);

@@ -60,12 +60,11 @@
     <string name="default_folder_credits">Банківськи картки</string>
     <string name="default_folder_emails">E-пошта</string>
     <string name="default_folder_shops">Online крамниці</string>
-    <string name="change_password">Змінити пароль</string>
     <string name="rate_application">Оцінити програму</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="ok">Так</string>
     <string name="are_you_sure">Ви впевнені?</string>
-    <string name="logout">Вийти</string>
+    <string name="logout">Відв\'язати аккаунт</string>
     <string name="fingerprint_hint">Доторкнися сенсора</string>
     <string name="fingerprint_success">Відбиток прийнятий</string>
     <string name="fingerprint_not_recognized">Відбиток не прийнятий. Повторить спробу.</string>

@@ -104,7 +104,7 @@ public class PasswordGenerator {
 				private final char[] chars;
 				private final int minChars;
 
-				public PwSet(PasswordCharacterSet pwSet) {
+				PwSet(PasswordCharacterSet pwSet) {
 						this.minChars = pwSet.getMinCharacters();
 						char[] pwSetChars = pwSet.getCharacters();
 						// Defensive copy

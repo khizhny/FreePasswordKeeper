@@ -48,7 +48,7 @@
     <string name="file_not_found">Файл не найден</string>
     <string name="file_io_error">Ошибка ввода/вывода</string>
     <string name="db_not_found">На SD карте не найден файл с БД</string>
-    <string name="sign_in_problems">Проблева авторизации в Google Drive!</string>
+    <string name="sign_in_problems">Проблема авторизации в Google Drive!</string>
     <string name="unable_to_open_file">Не удалось открыть файл</string>
     <string name="backup_saved_to_sd">Копия сохранена на SD карту</string>
     <string name="failed_to_create_new_contents_on_drive">Неудалось создать новое содержимое на Google Drive.</string>
@@ -60,12 +60,11 @@
     <string name="default_folder_credits">Банковские карты</string>
     <string name="default_folder_emails">Электронная Почта</string>
     <string name="default_folder_shops">Online магазины</string>
-    <string name="change_password">Сменить пароль</string>
     <string name="rate_application">Оценить программу</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="ok">Да</string>
     <string name="are_you_sure">Вы уверены?</string>
-    <string name="logout">Выйти</string>
+    <string name="logout">Отвязать аккаунт</string>
     <string name="fingerprint_hint">Коснитесь сенсора</string>
     <string name="fingerprint_success">Отпечаток принят</string>
     <string name="enable_fingerprint">Вкл. сенсор отпечатков</string>

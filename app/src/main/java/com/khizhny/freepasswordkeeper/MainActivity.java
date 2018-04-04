@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
             menu.removeItem(R.id.action_restore);
             menu.removeItem(R.id.action_rate);
             menu.removeItem(R.id.action_privacy);
+            menu.removeItem(R.id.action_logout);
         } else {
             menu.removeItem(R.id.action_selection_paste);
             menu.removeItem(R.id.action_selection_delete);

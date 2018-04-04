@@ -19,8 +19,10 @@ import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -57,18 +59,18 @@ public class LoginActivity extends AppCompatActivity {
     static final int MIN_USERNAME_LENGTH = 1;
     static final int MIN_USER_PASS_LENGTH = 4;
     public static final String URL_4PDA_PRIVACY = "http://4pda.ru/forum/index.php?showtopic=730676&st=20#entry58120636";
-    public static final String KEY_USE_FINGERPRINT = "KEY_USE_FINGERPRINT";
-    private static final String TAG = MainActivity.class.getSimpleName();
-    static final String DEFAULT_KEY_NAME = "FreePassKeeperSecretKeyTEST1";
-    public static final String KEY_USER_PASS = "USER_PASS_";
+    private static final String KEY_USE_FINGERPRINT = "KEY_USE_FINGERPRINT";
+    static final String TAG = MainActivity.class.getSimpleName();
+    private static final String FINGERPRINT_KEY_NAME = "FreePassKeeper_SecretKey003";
+    private static final String KEY_USER_PASS = "USER_PASS_";
 
     // Fingerprint auth stuff
-    static boolean useFingerprint = true;
-    static boolean fingerprintSupported;
-    private KeyStore mKeyStore;
+    private static boolean useFingerprint = false;
+    private static boolean fingerprintSupported;
+    private KeyStore keyStore;
     private SecretKey secretKey;
-    private FingerprintManager.CryptoObject mCryptoObject;
-    private FingerprintUiHelper mFingerprintUiHelper;
+    private FingerprintManager.CryptoObject cryptoObject;
+    private FingerprintUiHelper fingerprintUiHelper;
     private Cipher cipher;
 
     // UI references.
@@ -86,36 +88,47 @@ public class LoginActivity extends AppCompatActivity {
         refreshUserList();
         if (fingerprintSupported) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            useFingerprint = settings.getBoolean(KEY_USE_FINGERPRINT, true);
+            useFingerprint = settings.getBoolean(KEY_USE_FINGERPRINT, false);
             switchFingerprintAuth(useFingerprint);
+        }else{
+            switchFingerprintAuth(false);
         }
     }
 
-    void switchFingerprintAuth(boolean enabled) {
+    private void switchFingerprintAuth(boolean enabled) {
+        Log.d(TAG,"switchFingerprintAuth("+enabled+")");
         if (enabled) {
             useFingerprint = true;
             findViewById(R.id.fingerprint_image).setVisibility(View.VISIBLE);
             findViewById(R.id.fingerprint_status).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.fingerprint_status)).setText(R.string.fingerprint_hint);
             if (useFingerprintMenuItem != null) useFingerprintMenuItem.setChecked(useFingerprint);
-            mFingerprintUiHelper.startListening(mCryptoObject);
+            if (fingerprintUiHelper!=null) fingerprintUiHelper.startListening(cryptoObject);
         } else {
             useFingerprint = false;
             findViewById(R.id.fingerprint_image).setVisibility(View.GONE);
             findViewById(R.id.fingerprint_status).setVisibility(View.GONE);
             if (useFingerprintMenuItem != null) useFingerprintMenuItem.setChecked(useFingerprint);
-            mFingerprintUiHelper.stopListening();
+            if (fingerprintUiHelper!=null) fingerprintUiHelper.stopListening();
         }
+        // Saving preference
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings.edit().putBoolean(KEY_USE_FINGERPRINT, useFingerprint).apply();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(false);
+        setTitle(getString(R.string.login_activity_title));
+
         // Set up the login form.
         usersView = findViewById(R.id.login);
 
-        setTitle(getString(R.string.login_activity_title));
         passwordView = findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -134,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // enabling fingerprint scanner
         fingerprintSupported = initFingerprintStuff();
+        Log.d(TAG,"onCreate  fingerprintSupported ="+ fingerprintSupported);
     }
 
     private boolean initFingerprintStuff() {
@@ -171,26 +185,26 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
 
-            mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-            mKeyStore.load(null);
+            keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
 
             // creating key if not exist
-            if (!mKeyStore.isKeyEntry(DEFAULT_KEY_NAME)) {
-                createKey(DEFAULT_KEY_NAME);
+            if (!keyStore.isKeyEntry(FINGERPRINT_KEY_NAME)) {
+                createKey(FINGERPRINT_KEY_NAME);
             }
 
-            secretKey = (SecretKey) mKeyStore.getKey(DEFAULT_KEY_NAME, null);
+            secretKey = (SecretKey) keyStore.getKey(FINGERPRINT_KEY_NAME, null);
 
             // Init Cipher object
             if (initCipher()) {
-                mCryptoObject = new FingerprintManager.CryptoObject(cipher);
-                mFingerprintUiHelper = new FingerprintUiHelper(getSystemService(FingerprintManager.class),
+                cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                fingerprintUiHelper = new FingerprintUiHelper(getSystemService(FingerprintManager.class),
                         (ImageView) findViewById(R.id.fingerprint_image),
                         (TextView) findViewById(R.id.fingerprint_status), new FingerprintUiHelper.Callback() {
                     @Override
                     public void onAuthenticated() {
-                        mFingerprintUiHelper.stopListening();
-                        attemptLoginWithFingerprint((User) usersView.getSelectedItem(), cipher);
+                        fingerprintUiHelper.stopListening();
+                        attemptLoginWithFingerprint((User) usersView.getSelectedItem());
                     }
 
                     @Override
@@ -212,7 +226,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //Create a new method that we’ll use to initialize our cipher//
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public boolean initCipher() {
+    private boolean initCipher() {
         try {
             //Obtain a cipher instance and configure it with the properties required for fingerprint authentication//
             cipher = Cipher.getInstance(
@@ -225,16 +239,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         try {
-            mKeyStore.load(null);
-            SecretKey secretKey = (SecretKey) mKeyStore.getKey(DEFAULT_KEY_NAME,
+            keyStore.load(null);
+            SecretKey secretKey = (SecretKey) keyStore.getKey(FINGERPRINT_KEY_NAME,
                     null);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(Decrypter.IV));
             //Return true if the cipher has been initialized successfully//
             return true;
-        } catch (KeyPermanentlyInvalidatedException e) {
-
-            //Return false if cipher initialization failed//
-            return false;
         } catch (KeyStoreException
                 | CertificateException
                 | UnrecoverableKeyException
@@ -242,22 +252,24 @@ public class LoginActivity extends AppCompatActivity {
                 | NoSuchAlgorithmException
                 | InvalidAlgorithmParameterException
                 | InvalidKeyException e) {
-            throw new RuntimeException("Failed to init Cipher", e);
+            Log.e(TAG,"Failed to init Cipher:"+e.getMessage());
+            return false;
         }
     }
 
-    public void createKey(String keyName) {
+    private void createKey(String keyName) {
         try {
-            mKeyStore.load(null);
-            KeyGenParameterSpec.Builder builder = null;
+            keyStore.load(null);
+            KeyGenParameterSpec.Builder builder;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 builder = new KeyGenParameterSpec.Builder(keyName,
                         KeyProperties.PURPOSE_ENCRYPT |
                                 KeyProperties.PURPOSE_DECRYPT)
                         .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                         // Require the user to authenticate with a fingerprint to authorize every use
-                        // of the key
                         .setUserAuthenticationRequired(true)
+                        .setRandomizedEncryptionRequired(false)
+                        .setUserAuthenticationValidityDurationSeconds(8*60*60)
                         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
                 // This is a workaround to avoid crashes on devices whose API level is < 24
@@ -271,12 +283,14 @@ public class LoginActivity extends AppCompatActivity {
                 KeyGenerator mKeyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
                 mKeyGenerator.init(builder.build());
                 mKeyGenerator.generateKey();
+                Log.d(TAG,"New SecretKeyCreated.");
             }
         } catch (NoSuchAlgorithmException
                 | InvalidAlgorithmParameterException
                 | NoSuchProviderException
                 | CertificateException
                 | IOException e) {
+            Log.e(TAG,"SecretKeyCreationError:"+e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -295,10 +309,7 @@ public class LoginActivity extends AppCompatActivity {
             if (alertDialog.isShowing()) alertDialog.dismiss();
         }
         db.close();
-        // Saving preferences
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        settings.edit().putBoolean(KEY_USE_FINGERPRINT, useFingerprint).apply();
-        if (mFingerprintUiHelper != null) mFingerprintUiHelper.stopListening();
+        if (fingerprintUiHelper != null) fingerprintUiHelper.stopListening();
     }
 
     private void attemptLogin(User user, String pass) {
@@ -318,7 +329,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void attemptLoginWithFingerprint(User user, Cipher cipher) {
+    private void attemptLoginWithFingerprint(User user) {
         if (user != null) {
             // Restoring preferences
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -471,13 +482,13 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener, DialogInterface.OnClickListener cancelListener) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, cancelListener)
-                .create()
-                .show();
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setMessage(message);
+        b.setPositiveButton(R.string.ok, okListener);
+        if (cancelListener!=null) b.setNegativeButton(R.string.cancel, cancelListener);
+        b.create().show();
     }
 
 }

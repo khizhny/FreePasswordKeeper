@@ -61,12 +61,10 @@
     <string name="default_folder_credits">Credit cards</string>
     <string name="default_folder_emails">Mailboxes</string>
     <string name="default_folder_shops">Online shops</string>
-    <string name="change_password">Change password</string>
-    <string name="rate_application">Rate application</string>
+     <string name="rate_application">Rate application</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="enable_fingerprint">Enable fingerprint</string>
-
     <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
     <string name="fingerprint_success">Fingerprint recognized</string>
     <string name="fingerprint_hint">Touch sensor</string>

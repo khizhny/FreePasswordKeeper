@@ -53,19 +53,19 @@
         android:id="@+id/action_selection_paste"
         android:orderInCategory="991"
         android:icon="@drawable/ic_paste"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item android:title="@string/cancel"
         android:id="@+id/action_selection_cancel"
         android:orderInCategory="992"
         android:icon="@drawable/ic_cancel"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item android:title="@string/delete"
         android:id="@+id/action_selection_delete"
         android:orderInCategory="993"
         android:icon="@drawable/ic_delete_forever"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
 
 </menu>

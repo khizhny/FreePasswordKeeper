@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/entry_icon"
@@ -11,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:padding="4dp"
-        app:srcCompat="@drawable/ic_folder" />
+        app:srcCompat="@drawable/ic_folder"
+        android:contentDescription="entry_icon" />
 
     <TextView
         android:id="@+id/entry_text"
@@ -20,5 +23,6 @@
         android:layout_gravity="start"
         android:gravity="center_vertical"
         android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:text="@string/new_folder" />
 </LinearLayout>

@@ -5,13 +5,13 @@ import android.content.ContentValues;
 class Entry extends Node {
 
 		// information
-		String password="";
-		String login="";
-		String url="https://";
-		String comment="";
+		String password;
+		String login;
+		String url;
+		String comment;
 
 		// references
-		private User user=null; //Back ref to user
+		private User user; //Back ref to user
 
 		Entry(Category category, String password,String login,String name,String comment,String url,int id){
 				this.password=password;
