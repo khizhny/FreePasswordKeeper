@@ -17,98 +17,98 @@ import java.util.Random;
 
 @SuppressWarnings("SameParameterValue")
 class Gpw {
-		private static final GpwData data = new GpwData();
-		private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+    private static final GpwData data = new GpwData();
+    private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-		public static String generate(int pwl) {
-				int c1, c2, c3;
-				int nchar;
+    public static String generate(int pwl) {
+        int c1, c2, c3;
+        int nchar;
 
-				StringBuilder password;
-				Random ran = new Random(); // new random source seeded by clock
-				password = new StringBuilder(pwl);
-				double pik = ran.nextDouble(); // random number [0,1]
-				long ranno = (long) (pik * data.getSigma()); // weight by sum of frequencies
-				long sum = 0;
-				for (c1 = 0; c1 < 26; c1++) {
-						for (c2 = 0; c2 < 26; c2++) {
-								for (c3 = 0; c3 < 26; c3++) {
-										sum += data.get(c1, c2, c3);
-										if (sum > ranno) {
-												password.append(alphabet.charAt(c1));
-												password.append(alphabet.charAt(c2));
-												password.append(alphabet.charAt(c3));
-												c1 = 26; // Found start. Break all 3 loops.
-												c2 = 26;
-												c3 = 26;
-										} // if sum
-								} // for c3
-						} // for c2
-				} // for c1
+        StringBuilder password;
+        Random ran = new Random(); // new random source seeded by clock
+        password = new StringBuilder(pwl);
+        double pik = ran.nextDouble(); // random number [0,1]
+        long ranno = (long) (pik * data.getSigma()); // weight by sum of frequencies
+        long sum = 0;
+        for (c1 = 0; c1 < 26; c1++) {
+            for (c2 = 0; c2 < 26; c2++) {
+                for (c3 = 0; c3 < 26; c3++) {
+                    sum += data.get(c1, c2, c3);
+                    if (sum > ranno) {
+                        password.append(alphabet.charAt(c1));
+                        password.append(alphabet.charAt(c2));
+                        password.append(alphabet.charAt(c3));
+                        c1 = 26; // Found start. Break all 3 loops.
+                        c2 = 26;
+                        c3 = 26;
+                    } // if sum
+                } // for c3
+            } // for c2
+        } // for c1
 
-				// Now do a random walk.
-				nchar = 3;
-				while (nchar < pwl) {
-						c1 = alphabet.indexOf(password.charAt(nchar - 2));
-						c2 = alphabet.indexOf(password.charAt(nchar - 1));
-						sum = 0;
-						for (c3 = 0; c3 < 26; c3++)
-								sum += data.get(c1, c2, c3);
-						if (sum == 0) {
-								break; // exit while loop
-						}
-						pik = ran.nextDouble();
-						ranno = (long) (pik * sum);
-						sum = 0;
-						for (c3 = 0; c3 < 26; c3++) {
-								sum += data.get(c1, c2, c3);
-								if (sum > ranno) {
-										password.append(alphabet.charAt(c3));
-										c3 = 26; // break for loop
-								} // if sum
-						} // for c3
-						nchar++;
-				} // while nchar
-				return password.toString();
-		} // generate()
+        // Now do a random walk.
+        nchar = 3;
+        while (nchar < pwl) {
+            c1 = alphabet.indexOf(password.charAt(nchar - 2));
+            c2 = alphabet.indexOf(password.charAt(nchar - 1));
+            sum = 0;
+            for (c3 = 0; c3 < 26; c3++)
+                sum += data.get(c1, c2, c3);
+            if (sum == 0) {
+                break; // exit while loop
+            }
+            pik = ran.nextDouble();
+            ranno = (long) (pik * sum);
+            sum = 0;
+            for (c3 = 0; c3 < 26; c3++) {
+                sum += data.get(c1, c2, c3);
+                if (sum > ranno) {
+                    password.append(alphabet.charAt(c3));
+                    c3 = 26; // break for loop
+                } // if sum
+            } // for c3
+            nchar++;
+        } // while nchar
+        return password.toString();
+    } // generate()
 } // GpwWindow
 
 class GpwData {
-		private static int[][][] tris = null;
-		private static long[] sigma = null; // 125729
+    private static int[][][] tris = null;
+    private static long[] sigma = null; // 125729
 
-		GpwData() {
-				int c1, c2, c3;
-				tris = new int[26][26][26];
-				sigma = new long[1];
-				GpwDataInit1.fill(this); // Break into two classes for NS 4.0
-				GpwDataInit2.fill(this); // .. its Java 1.1 barfs on methods > 65K
-				for (c1 = 0; c1 < 26; c1++) {
-						for (c2 = 0; c2 < 26; c2++) {
-								for (c3 = 0; c3 < 26; c3++) {
-										sigma[0] += (long) tris[c1][c2][c3];
-								} // for c3
-						} // for c2
-				} // for c1
-		} // constructor
+    GpwData() {
+        int c1, c2, c3;
+        tris = new int[26][26][26];
+        sigma = new long[1];
+        GpwDataInit1.fill(this); // Break into two classes for NS 4.0
+        GpwDataInit2.fill(this); // .. its Java 1.1 barfs on methods > 65K
+        for (c1 = 0; c1 < 26; c1++) {
+            for (c2 = 0; c2 < 26; c2++) {
+                for (c3 = 0; c3 < 26; c3++) {
+                    sigma[0] += (long) tris[c1][c2][c3];
+                } // for c3
+            } // for c2
+        } // for c1
+    } // constructor
 
-		void set(int x1, int x2, int x3, int v) {
-				tris[x1][x2][x3] = v;
-		}
+    void set(int x1, int x2, int x3, int v) {
+        tris[x1][x2][x3] = v;
+    }
 
-		long get(int x1, int x2, int x3) {
-				return (long) tris[x1][x2][x3];
-		}
+    long get(int x1, int x2, int x3) {
+        return (long) tris[x1][x2][x3];
+    }
 
-		long getSigma() {
-				return sigma[0];
-		}
+    long getSigma() {
+        return sigma[0];
+    }
 
 }
 
 class GpwDataInit1 {
 
-		private static final int[][][] tris1 = {{/* [13][26][26] */
+    private static final int[][][] tris1 = {{/* [13][26][26] */
 /* A A */ {2, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0},
 /* A B */ {37, 25, 2, 5, 38, 0, 0, 2, 46, 1, 0, 304, 0, 2, 49, 0, 0, 24, 24, 0, 19, 0, 0, 0, 14, 0},
 /* A C */ {26, 1, 64, 2, 107, 0, 1, 94, 67, 0, 173, 13, 5, 1, 35, 1, 13, 32, 3, 114, 23, 0, 0, 0, 45, 0},
@@ -447,18 +447,18 @@ class GpwDataInit1 {
 /* M X */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /* M Y */ {0, 0, 11, 0, 5, 0, 1, 0, 0, 0, 0, 1, 0, 2, 7, 0, 0, 7, 7, 4, 0, 0, 0, 0, 0, 0},
 /* M Z */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-		}};
+    }};
 
-		static void fill(GpwData xx) {
-				int c1, c2, c3;
-				for (c1 = 0; c1 < 13; c1++) {
-						for (c2 = 0; c2 < 26; c2++) {
-								for (c3 = 0; c3 < 26; c3++) {
-										xx.set(c1, c2, c3, tris1[c1][c2][c3]);
-								} // for c3
-						} // for c2
-				} // for c1
-		} // fill()
+    static void fill(GpwData xx) {
+        int c1, c2, c3;
+        for (c1 = 0; c1 < 13; c1++) {
+            for (c2 = 0; c2 < 26; c2++) {
+                for (c3 = 0; c3 < 26; c3++) {
+                    xx.set(c1, c2, c3, tris1[c1][c2][c3]);
+                } // for c3
+            } // for c2
+        } // for c1
+    } // fill()
 
 } // GpwDataInit1
 
@@ -466,7 +466,7 @@ class GpwDataInit1 {
 
 class GpwDataInit2 {
 
-		private static final int[][][] tris2 = {{/* [13][26][26] */
+    private static final int[][][] tris2 = {{/* [13][26][26] */
 /* N A */ {2, 24, 33, 23, 6, 3, 30, 6, 20, 0, 9, 115, 29, 59, 2, 31, 0, 94, 28, 159, 19, 10, 5, 0, 1, 5},
 /* N B */ {5, 0, 1, 0, 20, 0, 0, 0, 1, 0, 0, 4, 0, 0, 7, 0, 0, 4, 1, 0, 10, 0, 0, 0, 0, 0},
 /* N C */ {25, 0, 0, 0, 190, 0, 0, 87, 51, 0, 1, 18, 0, 0, 62, 0, 0, 16, 0, 36, 21, 0, 0, 0, 8, 0},
@@ -805,17 +805,17 @@ class GpwDataInit2 {
 /* Z X */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /* Z Y */ {0, 1, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 /* Z Z */ {7, 0, 0, 0, 1, 0, 0, 0, 7, 0, 0, 17, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 5, 0}
-		}};
+    }};
 
-		static void fill(GpwData xx) {
-				int c1, c2, c3;
-				for (c1 = 0; c1 < 13; c1++) {
-						for (c2 = 0; c2 < 26; c2++) {
-								for (c3 = 0; c3 < 26; c3++) {
-										xx.set(c1 + 13, c2, c3, tris2[c1][c2][c3]);
-								} // for c3
-						} // for c2
-				} // for c1
-		} // fill()
+    static void fill(GpwData xx) {
+        int c1, c2, c3;
+        for (c1 = 0; c1 < 13; c1++) {
+            for (c2 = 0; c2 < 26; c2++) {
+                for (c3 = 0; c3 < 26; c3++) {
+                    xx.set(c1 + 13, c2, c3, tris2[c1][c2][c3]);
+                } // for c3
+            } // for c2
+        } // for c1
+    } // fill()
 
 } // GpwDataInit2

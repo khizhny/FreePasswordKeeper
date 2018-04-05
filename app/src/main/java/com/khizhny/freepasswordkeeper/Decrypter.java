@@ -43,7 +43,7 @@ class Decrypter {
             cipher = Cipher.getInstance(AES_CBC_PKCS5_PADDING);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException e) {
             e.printStackTrace();
-            Log.e(TAG,"Decriptor Constructor Error. "+ e.getMessage());
+            Log.e(TAG, "Decriptor Constructor Error. " + e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ class Decrypter {
             cipher = Cipher.getInstance(AES_CBC_PKCS7_PADDING);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             e.printStackTrace();
-            Log.e(TAG,"Decription Error. "+ e.getMessage());
+            Log.e(TAG, "Decription Error. " + e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ class Decrypter {
         } catch (InvalidKeyException
                 | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
-            Log.e(TAG,"Encription Error. "+ e.getMessage());
+            Log.e(TAG, "Encription Error. " + e.getMessage());
             return "";
         }
 
@@ -73,7 +73,7 @@ class Decrypter {
             utf8EncryptedData = cipher.doFinal(data.getBytes());
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
-            Log.e(TAG,"Encryption Error. "+ e.getMessage());
+            Log.e(TAG, "Encryption Error. " + e.getMessage());
             return "";
         }
 
@@ -87,7 +87,7 @@ class Decrypter {
             byte[] utf8 = cipher.doFinal(decryptedData);
             return new String(utf8, "UTF8");
         } catch (Exception e) {
-            Log.e(TAG,"Decryption Error. "+ e.getMessage());
+            Log.e(TAG, "Decryption Error. " + e.getMessage());
             return "";
         }
     }

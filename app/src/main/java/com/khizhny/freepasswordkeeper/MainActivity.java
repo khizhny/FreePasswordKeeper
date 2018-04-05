@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
     private void googleSignOut() {
         try {
             googleSignInClient.signOut();
-        }catch (Exception e){
+        } catch (Exception e) {
             return;
         }
     }

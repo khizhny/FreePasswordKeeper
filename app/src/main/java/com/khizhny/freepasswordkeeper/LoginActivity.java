@@ -90,26 +90,26 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             useFingerprint = settings.getBoolean(KEY_USE_FINGERPRINT, false);
             switchFingerprintAuth(useFingerprint);
-        }else{
+        } else {
             switchFingerprintAuth(false);
         }
     }
 
     private void switchFingerprintAuth(boolean enabled) {
-        Log.d(TAG,"switchFingerprintAuth("+enabled+")");
+        Log.d(TAG, "switchFingerprintAuth(" + enabled + ")");
         if (enabled) {
             useFingerprint = true;
             findViewById(R.id.fingerprint_image).setVisibility(View.VISIBLE);
             findViewById(R.id.fingerprint_status).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.fingerprint_status)).setText(R.string.fingerprint_hint);
             if (useFingerprintMenuItem != null) useFingerprintMenuItem.setChecked(useFingerprint);
-            if (fingerprintUiHelper!=null) fingerprintUiHelper.startListening(cryptoObject);
+            if (fingerprintUiHelper != null) fingerprintUiHelper.startListening(cryptoObject);
         } else {
             useFingerprint = false;
             findViewById(R.id.fingerprint_image).setVisibility(View.GONE);
             findViewById(R.id.fingerprint_status).setVisibility(View.GONE);
             if (useFingerprintMenuItem != null) useFingerprintMenuItem.setChecked(useFingerprint);
-            if (fingerprintUiHelper!=null) fingerprintUiHelper.stopListening();
+            if (fingerprintUiHelper != null) fingerprintUiHelper.stopListening();
         }
         // Saving preference
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // enabling fingerprint scanner
         fingerprintSupported = initFingerprintStuff();
-        Log.d(TAG,"onCreate  fingerprintSupported ="+ fingerprintSupported);
+        Log.d(TAG, "onCreate  fingerprintSupported =" + fingerprintSupported);
     }
 
     private boolean initFingerprintStuff() {
@@ -252,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
                 | NoSuchAlgorithmException
                 | InvalidAlgorithmParameterException
                 | InvalidKeyException e) {
-            Log.e(TAG,"Failed to init Cipher:"+e.getMessage());
+            Log.e(TAG, "Failed to init Cipher:" + e.getMessage());
             return false;
         }
     }
@@ -269,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Require the user to authenticate with a fingerprint to authorize every use
                         .setUserAuthenticationRequired(true)
                         .setRandomizedEncryptionRequired(false)
-                        .setUserAuthenticationValidityDurationSeconds(8*60*60)
+                        .setUserAuthenticationValidityDurationSeconds(8 * 60 * 60)
                         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
                 // This is a workaround to avoid crashes on devices whose API level is < 24
@@ -283,14 +283,14 @@ public class LoginActivity extends AppCompatActivity {
                 KeyGenerator mKeyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
                 mKeyGenerator.init(builder.build());
                 mKeyGenerator.generateKey();
-                Log.d(TAG,"New SecretKeyCreated.");
+                Log.d(TAG, "New SecretKeyCreated.");
             }
         } catch (NoSuchAlgorithmException
                 | InvalidAlgorithmParameterException
                 | NoSuchProviderException
                 | CertificateException
                 | IOException e) {
-            Log.e(TAG,"SecretKeyCreationError:"+e.getMessage());
+            Log.e(TAG, "SecretKeyCreationError:" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -487,7 +487,7 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setMessage(message);
         b.setPositiveButton(R.string.ok, okListener);
-        if (cancelListener!=null) b.setNegativeButton(R.string.cancel, cancelListener);
+        if (cancelListener != null) b.setNegativeButton(R.string.cancel, cancelListener);
         b.create().show();
     }
 
