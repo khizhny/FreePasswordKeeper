@@ -1,11 +1,13 @@
 package com.khizhny.freepasswordkeeper;
 
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -43,7 +45,7 @@ class Decrypter {
             cipher = Cipher.getInstance(AES_CBC_PKCS5_PADDING);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException e) {
             e.printStackTrace();
-            Log.e(TAG, "Decriptor Constructor Error. " + e.getMessage());
+            Log.e(TAG, "Decryption class constructor Error. " + e.getMessage());
         }
     }
 
@@ -85,7 +87,11 @@ class Decrypter {
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV));
             byte[] decryptedData = Base64.decode(base64EncryptedData, Base64.DEFAULT);
             byte[] utf8 = cipher.doFinal(decryptedData);
-            return new String(utf8, "UTF8");
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                return new String(utf8, StandardCharsets.UTF_8);
+            }else {
+                return new String(utf8, StandardCharsets.UTF_8);
+            }
         } catch (Exception e) {
             Log.e(TAG, "Decryption Error. " + e.getMessage());
             return "";

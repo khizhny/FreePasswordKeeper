@@ -51,7 +51,6 @@
     <string name="db_not_found">DB not found on SD card</string>
     <string name="sign_in_problems">Google SignIn problems!</string>
     <string name="unable_to_open_file">Unable to open file</string>
-    <string name="backup_saved_to_sd">Backup saved to SD card</string>
     <string name="failed_to_create_new_contents_on_drive">Failed to create new contents on Drive.</string>
     <string name="short_pass">Password too short</string>
     <string name="passwords_dont_match">Passwords don\'t match.</string>

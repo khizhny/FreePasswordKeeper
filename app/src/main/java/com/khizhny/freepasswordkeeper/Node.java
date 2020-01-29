@@ -1,9 +1,9 @@
 package com.khizhny.freepasswordkeeper;
 
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
 
-@SuppressWarnings("SuspiciousMethodCalls")
+import androidx.annotation.NonNull;
+
 abstract class Node implements Comparable<Node> {
     int id = -1;                // will be auto generated in DB after save
     String name;            // Name of Entry, Category or User

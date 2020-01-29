@@ -50,7 +50,6 @@
     <string name="db_not_found">СУБД не знайдено на SD карті</string>
     <string name="sign_in_problems">Проблема авторизації в Google Drive!</string>
     <string name="unable_to_open_file">Неможливо прочитати файл</string>
-    <string name="backup_saved_to_sd">Резервна копія збережена на SD карті</string>
     <string name="failed_to_create_new_contents_on_drive">Неможливо створити контент на Google Drive.</string>
     <string name="short_pass">Пароль занадто короткий</string>
     <string name="passwords_dont_match">Паролі не збігаються.</string>

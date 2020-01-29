@@ -50,7 +50,6 @@
     <string name="db_not_found">На SD карте не найден файл с БД</string>
     <string name="sign_in_problems">Проблема авторизации в Google Drive!</string>
     <string name="unable_to_open_file">Не удалось открыть файл</string>
-    <string name="backup_saved_to_sd">Копия сохранена на SD карту</string>
     <string name="failed_to_create_new_contents_on_drive">Неудалось создать новое содержимое на Google Drive.</string>
     <string name="short_pass">Слишком маленький пароль</string>
     <string name="passwords_dont_match">Пароли не совпадают</string>

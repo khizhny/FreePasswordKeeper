@@ -1,6 +1,5 @@
 package com.khizhny.freepasswordkeeper;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ClipData;
@@ -8,22 +7,17 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,27 +33,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.drive.CreateFileActivityOptions;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveClient;
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.OpenFileActivityOptions;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.auth.api.signin.*;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,7 +55,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -85,39 +69,28 @@ import static com.khizhny.freepasswordkeeper.LoginActivity.MIN_USER_PASS_LENGTH;
 import static com.khizhny.freepasswordkeeper.LoginActivity.URL_4PDA_PRIVACY;
 import static com.khizhny.freepasswordkeeper.LoginActivity.goToMarket;
 
-
-@SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity {
 
     private static final int PWD_MIN_LENGTH = 10;
     private static final int PWD_MAX_LENGTH = 14;
-    private static final String TAG = "TAG";
 
-    private static final int DIALOG_ERROR_CODE = 100;
-    private static final int REQUEST_CODE_ASK_PERMISSIONS = 9000; // Read SD card
     private static final int REQUEST_CODE_SIGN_IN_FOR_BACKUP = 9001; // Google sign in and backup
     private static final int REQUEST_CODE_SIGN_IN_FOR_RESTORE = 9002; // Google sign in and restore
-    private static final int REQUEST_CODE_CREATOR = 9003; // File created
     private static final int REQUEST_CODE_OPEN_ITEM = 9004; // File opened from drive
-
     //Backup paths
     public static final String SD_BACKUP_FOLDER_NAME = "/FreePasswordKeeper";
     public static final String ZIP_ARCHIVE_INNER_FOLDER_NAME = "/FreePasswordKeeper";
     public static final String ZIP_ARCHIVE_FILE_NAME = "pass_backup.zip";
     private static final String LOADED_ZIP_FILENAME = "loaded_file.zip";
+    private static final String ZIP_TYPE = "application/zip";
 
 
     private User user;
     private DbHelper db;
 
-    //private GoogleApiClient googleApiClient;
-
     private GoogleSignInAccount googleSignInAccount;
     private GoogleSignInClient googleSignInClient; // Client for High order operations with drive
-    private DriveClient driveClient;
-    private DriveResourceClient driveResourceClient;
-    private TaskCompletionSource<DriveId> mOpenItemTaskSource;
-
+    private DriveServiceHelper driveServiceHelper;
 
     private Category currentCategory;
     private Category backNode; // unlinked node just to navigate back on tree
@@ -217,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Google signIn configuration
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Drive.SCOPE_FILE)
+                .requestScopes(new Scope (DriveScopes.DRIVE_FILE))
                 .build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
     }
@@ -255,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
         showProgress(true);
         // Google signIn configuration
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Drive.SCOPE_FILE)
+                .requestScopes(new Scope (DriveScopes.DRIVE_FILE))
+                .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
         startActivityForResult(googleSignInClient.getSignInIntent(), code);
@@ -351,14 +325,13 @@ public class MainActivity extends AppCompatActivity {
                 showCategoryDialog(null);
                 return true;
             case R.id.action_backup:
-                requestSdWritePermissions();
-                backup();
+                checkSignInBeforeBackup();
                 return true;
             case R.id.action_logout:
                 googleSignOut();
                 return true;
             case R.id.action_restore:
-                restore();
+                checkSignInBeforeRestore();
                 return true;
             case android.R.id.home:
                 if (currentCategory == user.rootCategory) {
@@ -444,7 +417,6 @@ public class MainActivity extends AppCompatActivity {
             super(MainActivity.this, R.layout.list_row, categoryList);
         }
 
-        //Handler for rule picker dialog
         @NonNull
         @Override
         public View getView(int position, View rowView, @NonNull ViewGroup parent) {
@@ -502,7 +474,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-
             }
             return rowView;
         }
@@ -728,188 +699,135 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void requestSdWritePermissions() {
-        // requsting SD card access permissions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean hasWritePermission = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (!hasWritePermission) {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    showMessageOKCancel("System needs you permission to read SD card.",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
-                                    }
-                                }
-                            }, null);
-                    return;
-                }
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
-            }
-        }
-    }
-
-    private void backup() {
-
-        boolean hasWritePermission = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (!hasWritePermission) {
-            requestSdWritePermissions();
-        }
-        hasWritePermission = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWritePermission) {
-            showProgress(true);
-            backupToSd();
-            googleSignIn(REQUEST_CODE_SIGN_IN_FOR_BACKUP);
-        }
-    }
-
-    private void restart() {
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
-
-    /**
-     * Prompts the user to select a ZIP file
-     *
-     * @return Task that resolves with the selected item's ID.
-     */
-    protected Task<DriveId> pickZipFile() {
-        OpenFileActivityOptions openOptions =
-                new OpenFileActivityOptions.Builder()
-                        .setSelectionFilter(Filters.eq(SearchableField.MIME_TYPE, "application/zip"))
-                        .setActivityTitle(getString(R.string.select_zip))
+    private void backupToGoogleDrive(File zipFile) {
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(googleSignInAccount.getAccount());
+        com.google.api.services.drive.Drive googleDriveService =
+                new com.google.api.services.drive.Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential)
+                        .setApplicationName(getString(R.string.app_name))
                         .build();
-        return pickItem(openOptions);
-    }
+        driveServiceHelper = new DriveServiceHelper(googleDriveService);
 
-    /**
-     * Prompts the user to select a folder
-     *
-     * @param openOptions Filter that should be applied to the selection
-     * @return Task that resolves with the selected item's ID.
-     */
-    private Task<DriveId> pickItem(OpenFileActivityOptions openOptions) {
-        mOpenItemTaskSource = new TaskCompletionSource<>();
-        driveClient
-                .newOpenFileActivityIntentSender(openOptions)
-                .continueWith(new Continuation<IntentSender, Void>() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+        String file_name = sdf.format(new Date())+ "_" + zipFile.getName();
+
+        Task uploadTask = driveServiceHelper.uploadFile(file_name, zipFile, ZIP_TYPE);
+        uploadTask.addOnCompleteListener(
+                new OnCompleteListener() {
                     @Override
-                    public Void then(@NonNull Task<IntentSender> task) throws Exception {
-                        startIntentSenderForResult(
-                                task.getResult(), REQUEST_CODE_OPEN_ITEM, null, 0, 0, 0);
-                        return null;
+                    public void onComplete(@NonNull Task task) {
+                        showProgress(false);
                     }
-                });
-        return mOpenItemTaskSource.getTask();
-    }
-
-
-    private void restoreFromDrive() {
-        // Launch user interface and allow user to select file
-        pickZipFile()
-                .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                retrieveContents(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        Toast.makeText(MainActivity.this, R.string.no_file_selected, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                });
-    }
-
-    private void retrieveContents(DriveFile file) {
-        Task<DriveContents> openFileTask;
-        openFileTask = driveResourceClient.openFile(file, DriveFile.MODE_READ_ONLY);
-        openFileTask.continueWithTask(new Continuation<DriveContents, Task<Void>>() {
+                }
+        );
+        uploadTask.addOnSuccessListener(new OnSuccessListener() {
             @Override
-            public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                DriveContents contents = task.getResult();
-                // Saving zipped backup to Cache folder.
-                InputStream myInput = contents.getInputStream();
-                File tempFile = File.createTempFile(LOADED_ZIP_FILENAME, null, getApplicationContext().getCacheDir());
-                OutputStream myOutput = new FileOutputStream(tempFile);
-                byte[] buffer = new byte[100024];
-                int length;
-                while ((length = myInput.read(buffer)) > 0) {
-                    myOutput.write(buffer, 0, length);
-                }
-                myOutput.flush();
-                myOutput.close();
-                myInput.close();
-                //Unzip
-                try {
-                    String folderToExtractTo = Environment.getExternalStorageDirectory().getAbsolutePath() + SD_BACKUP_FOLDER_NAME;
-                    if (Zip.unZipFile(tempFile, new File(folderToExtractTo))) {
-                        tempFile.delete();
-                        restoreFromSD();
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.unzip_error, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, R.string.unzip_error, Toast.LENGTH_LONG).show();
-                }
-                Task<Void> discardTask = driveResourceClient.discardContents(contents);
-                return discardTask;
+            public void onSuccess(Object o) {
+                Toast.makeText(MainActivity.this,
+                        "Backup upload successfully", Toast.LENGTH_LONG).show();
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to read contents", e);
-                        Toast.makeText(MainActivity.this, R.string.unable_to_read_content, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                });
+        });
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, e.getLocalizedMessage()
+                        , Toast.LENGTH_LONG).show();
+            }
+        });
+        uploadTask.addOnCanceledListener(new OnCanceledListener() {
+            @Override
+            public void onCanceled() {
+                Toast.makeText(MainActivity.this,
+                        "Backup upload cancelled.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void restore() {
-        googleSignIn(REQUEST_CODE_SIGN_IN_FOR_RESTORE);
-    }
-
-    public void restoreFromSD() {
-        OutputStream myOutput;
-        File dbPath = this.getDatabasePath(DbHelper.DATABASE_NAME);
-        String sdFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + SD_BACKUP_FOLDER_NAME;
-        File directorys = new File(sdFolderPath);
-        if (directorys.exists()) {
-            try {
-                myOutput = new FileOutputStream(dbPath);
-                // Set the folder on the SDcard
-                File dbCopy = new File(sdFolderPath + "//" + DbHelper.DATABASE_NAME);
-                // Set the input file stream up:
-                InputStream myInputs = new FileInputStream(dbCopy);
-                // Transfer bytes from the input file to the output file
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = myInputs.read(buffer)) > 0) {
-                    myOutput.write(buffer, 0, length);
-                }
-                // Close and clear the streams
-                myOutput.flush();
-                myOutput.close();
-                myInputs.close();
-                Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
-                dbCopy.delete();
-                finish(); // going back to Login activity
-            } catch (FileNotFoundException e) {
-                Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.file_io_error, Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
+    private void checkSignInBeforeBackup() {
+        showProgress(true);
+        if(googleSignInAccount == null){
+            googleSignIn(REQUEST_CODE_SIGN_IN_FOR_BACKUP);
         } else {
-            Toast.makeText(this, R.string.db_not_found, Toast.LENGTH_LONG).show();
+            backupToGoogleDrive(backupToZipFile());
+        }
+    }
+    private void checkSignInBeforeRestore() {
+        showProgress(true);
+        if(googleSignInAccount == null){
+            googleSignIn(REQUEST_CODE_SIGN_IN_FOR_RESTORE);
+        } else {
+            sendDriveFilePickerIntent();
+        }
+    }
+
+    private void sendDriveFilePickerIntent(){
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(googleSignInAccount.getAccount());
+        com.google.api.services.drive.Drive googleDriveService =
+                new com.google.api.services.drive.Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential)
+                        .setApplicationName(getString(R.string.app_name))
+                        .build();
+        driveServiceHelper = new DriveServiceHelper(googleDriveService);
+        Intent filePickerIntent = driveServiceHelper.createFilePickerIntent(ZIP_TYPE);
+        startActivityForResult(filePickerIntent, REQUEST_CODE_OPEN_ITEM);
+    }
+
+    public void replaceAppDatabase(File zipFile) {
+        //Unzipping the file
+        File workingFolder = zipFile.getParentFile();
+        try {
+            if (Zip.unZipFile(zipFile, workingFolder)) {
+                zipFile.delete();
+                // replacing the database
+                OutputStream outputStreamtput;
+                InputStream inputStream;
+                File dbFile = this.getDatabasePath(DbHelper.DATABASE_NAME);
+                File newDbFile = new File (workingFolder.getAbsolutePath()+ "/" + DbHelper.DATABASE_NAME);
+
+                //String sdFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + SD_BACKUP_FOLDER_NAME;
+                if (workingFolder.exists() & newDbFile.exists()) {
+                    try {
+                        outputStreamtput = new FileOutputStream(dbFile);
+                        inputStream = new FileInputStream(newDbFile);
+                        // Transfer bytes from the input file to the output file
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = inputStream.read(buffer)) > 0) {
+                            outputStreamtput.write(buffer, 0, length);
+                        }
+                        // Close and clear the streams
+                        outputStreamtput.flush();
+                        outputStreamtput.close();
+                        inputStream.close();
+                        Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
+                        newDbFile.delete();
+                        finish(); // going back to Login activity
+                    } catch (FileNotFoundException e) {
+                        Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Toast.makeText(this, R.string.file_io_error, Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(this, R.string.db_not_found, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(MainActivity.this, R.string.unzip_error, Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this, R.string.unzip_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -923,11 +841,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result.isSuccess()) {
                     // Google SignIn successful.
                     googleSignInAccount = result.getSignInAccount();
-                    // Use the last signed in account here since it already have a Drive scope.
-                    driveClient = Drive.getDriveClient(this, GoogleSignIn.getLastSignedInAccount(this));
-                    // Build a drive resource client.
-                    driveResourceClient = Drive.getDriveResourceClient(this, GoogleSignIn.getLastSignedInAccount(this));
-                    backupToDrive();
+                    backupToGoogleDrive(backupToZipFile());
                 } else {
                     // SignIn failed
                     googleSignInAccount = null;
@@ -940,11 +854,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result.isSuccess()) {
                     // Google SignIn successful.
                     googleSignInAccount = result.getSignInAccount();
-                    // Use the last signed in account here since it already have a Drive scope.
-                    driveClient = Drive.getDriveClient(this, GoogleSignIn.getLastSignedInAccount(this));
-                    // Build a drive resource client.
-                    driveResourceClient = Drive.getDriveResourceClient(this, GoogleSignIn.getLastSignedInAccount(this));
-                    restoreFromDrive();
+                    sendDriveFilePickerIntent();
                 } else {
                     // SignIn failed
                     googleSignInAccount = null;
@@ -954,11 +864,13 @@ public class MainActivity extends AppCompatActivity {
 
             case REQUEST_CODE_OPEN_ITEM:
                 if (resultCode == RESULT_OK) {
-                    DriveId driveId = data.getParcelableExtra(
-                            OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID);
-                    mOpenItemTaskSource.setResult(driveId);
+                    Uri uri = data.getData();
+                    if (uri != null) {
+                        downloadFromGoogleDrive(uri);
+                    }
                 } else {
-                    mOpenItemTaskSource.setException(new RuntimeException(getString(R.string.unable_to_open_file)));
+                    //mOpenItemTaskSource.setException(new RuntimeException(getString(R.string.unable_to_open_file)));
+                    Toast.makeText(MainActivity.this, "Error loading file from drive", Toast.LENGTH_LONG).show();
                 }
                 showProgress(false);
                 break;
@@ -967,18 +879,41 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void backupToSd() {
+    /**
+     * Saves a file from its {@code uri} returned from the Storage Access Framework file picker
+     *
+     */
+    private void downloadFromGoogleDrive(Uri uri) {
+        if (driveServiceHelper != null) {
+            File destinationFile = new File(this.getFilesDir() + SD_BACKUP_FOLDER_NAME + "/"+ LOADED_ZIP_FILENAME);
+            driveServiceHelper.downloadFile(getContentResolver(), uri, destinationFile)
+                    .addOnSuccessListener(zipFile -> {
+                        replaceAppDatabase(zipFile);
+                    })
+                    .addOnFailureListener(exception ->
+                            Toast.makeText(this, "Unable to open file from picker.",
+                                    Toast.LENGTH_LONG).show()
+                    );
+
+        }
+    }
+    public File backupToZipFile() {
         InputStream myInput;
         File dbPath = this.getDatabasePath(DbHelper.DATABASE_NAME);
-        String sdFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + SD_BACKUP_FOLDER_NAME;
-        File sdFolder = new File(sdFolderPath);
-        if (!sdFolder.exists()) sdFolder.mkdirs();
-        if (sdFolder.exists()) {
+        File dataFolder = this.getFilesDir();
+        String folderForBackupPath = dataFolder.getAbsolutePath() + SD_BACKUP_FOLDER_NAME;
+        File folderForBackup = new File(folderForBackupPath);
+        if (folderForBackup.exists()){
+            folderForBackup.delete();
+            folderForBackup.mkdirs();
+        }
+        folderForBackup.mkdirs();
+        if (folderForBackup.exists()) {
             try {
                 // Copying BD file to SD card folder
                 myInput = new FileInputStream(dbPath);
                 // Set the output folder on the Scard
-                File directory = new File(sdFolderPath + ZIP_ARCHIVE_INNER_FOLDER_NAME);
+                File directory = new File(folderForBackupPath + ZIP_ARCHIVE_INNER_FOLDER_NAME);
                 if (!directory.exists()) directory.mkdirs();
                 File dbCopy = new File(directory.getPath() + "//" + DbHelper.DATABASE_NAME);
                 if (dbCopy.exists()) dbCopy.delete();
@@ -994,13 +929,12 @@ public class MainActivity extends AppCompatActivity {
                 myInput.close();
 
                 // compressing
-                String src_file_path = Environment.getExternalStorageDirectory()
-                        .getAbsolutePath() + SD_BACKUP_FOLDER_NAME + ZIP_ARCHIVE_INNER_FOLDER_NAME;
-                String destination_location = sdFolderPath + "//" + ZIP_ARCHIVE_FILE_NAME;
+                String src_file_path = folderForBackupPath + ZIP_ARCHIVE_INNER_FOLDER_NAME;
+                String destination_location = folderForBackupPath + "/" + ZIP_ARCHIVE_FILE_NAME;
                 if (Zip.compressFolder(new File(src_file_path), new File(destination_location))) {
                     dbCopy.delete();
                     directory.delete();
-                    Toast.makeText(this, R.string.backup_saved_to_sd, Toast.LENGTH_LONG).show();
+                    return  new File(destination_location);
                 }
             } catch (FileNotFoundException e) {
                 Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG).show();
@@ -1010,82 +944,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    void backupToDrive() {
-        final File zipFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + SD_BACKUP_FOLDER_NAME + "//" + ZIP_ARCHIVE_FILE_NAME);
-        driveResourceClient
-                .createContents()
-                .continueWithTask(
-                        new Continuation<DriveContents, Task<Void>>() {
-                            @Override
-                            public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                                return createFileIntentSender(task.getResult(), zipFile);
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(MainActivity.this, R.string.failed_to_create_new_contents_on_drive, Toast.LENGTH_LONG).show();
-                            }
-                        });
-    }
-
-    private Task<Void> createFileIntentSender(DriveContents driveContents, File zipFile) {
-        // Get an output stream for the contents.
-        try {
-            OutputStream outputStream = driveContents.getOutputStream();
-            InputStream inputStream = new FileInputStream(zipFile);
-
-            // Transfer bytes from the input file to the output file
-            byte[] buffer = new byte[100024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-            // Close and clear the streams
-            outputStream.flush();
-            outputStream.close();
-            outputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG).show();
-            return null;
-        } catch (IOException e) {
-            Toast.makeText(this, R.string.file_io_error, Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        // Create the initial metadata - MIME type and title.
-        // Note that the user will be able to change the title later.
-        Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
-        String currentDateandTime = sdf.format(new Date());
-
-        MetadataChangeSet metadataChangeSet =
-                new MetadataChangeSet.Builder()
-                        .setMimeType("application/zip")
-                        .setTitle(currentDateandTime + "_" + ZIP_ARCHIVE_FILE_NAME)
-                        .build();
-        // Set up options to configure and display the create file activity.
-        CreateFileActivityOptions createFileActivityOptions =
-                new CreateFileActivityOptions.Builder()
-                        .setInitialMetadata(metadataChangeSet)
-                        .setInitialDriveContents(driveContents)
-                        .build();
-
-        return driveClient
-                .newCreateFileActivityIntentSender(createFileActivityOptions)
-                .continueWith(
-                        new Continuation<IntentSender, Void>() {
-                            @Override
-                            public Void then(@NonNull Task<IntentSender> task) throws Exception {
-                                startIntentSenderForResult(task.getResult(), REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                                return null;
-                            }
-                        });
+        return null;
     }
 
     private void showEditUserDialog() {
@@ -1136,3 +995,4 @@ public class MainActivity extends AppCompatActivity {
         ((EditText) alertDialog.findViewById(R.id.newUserName)).setText(user.name);
     }
 }
+
